@@ -6,11 +6,20 @@ import java.util.*;
 public class Graph {
     private static final int INF = 0x3f3f3f3f;
     public Map<Integer, List<Edge>> map;
+    public int[][] matrix;
     public int V;
 
     public Graph() {
-        this.map = new HashMap<>();
         this.V = 0;
+        this.map = new HashMap<>();
+        this.matrix = new int[V][V];
+    }
+
+    public Graph(int[][] matrix) {
+        this.V = matrix.length;
+        this.matrix = matrix;
+        this.map = new HashMap<>();
+        build(matrix);
     }
 
     public void build(int[][] matrix) {
@@ -20,14 +29,23 @@ public class Graph {
         }
         for (int i = 0; i < V; i++) {
             for (int j = 0; j < V; j++) {
-                if (matrix[i][j] != 0) {
+                if (matrix[i][j] != 0 && matrix[i][j] != INF) {
                     map.get(i).add(new Edge(i, j, matrix[i][j]));
                 }
             }
         }
     }
 
-    //from 0 to n-1
+    public void floyd() {
+        for (int k = 0; k < V; k++) {
+            for (int i = 0; i < V; i++) {
+                for (int j = 0; j < V; j++) {
+                    matrix[i][j] = Math.min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+                }
+            }
+        }
+    }
+
     public int[] dijkstra() {
         int[] dis = new int[V];
         boolean[] visited = new boolean[V];
