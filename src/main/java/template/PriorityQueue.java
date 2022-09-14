@@ -1,3 +1,5 @@
+package template;
+
 public class PriorityQueue {
     private int[] heap;
     private int size;

@@ -1,3 +1,5 @@
+package template;
+
 public class MergeSort {
     public static void mergeSort(int[] arr) {
         mergeSort(arr, 0, arr.length - 1);

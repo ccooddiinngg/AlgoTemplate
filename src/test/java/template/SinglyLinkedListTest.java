@@ -1,5 +1,8 @@
+package template;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import template.SinglyLinkedList;
 
 import java.util.List;
 

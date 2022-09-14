@@ -1,4 +1,7 @@
+package template;
+
 import org.junit.jupiter.api.Test;
+import template.PriorityQueue;
 
 import static org.junit.jupiter.api.Assertions.*;
 

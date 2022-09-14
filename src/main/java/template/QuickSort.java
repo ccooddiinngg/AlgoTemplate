@@ -1,3 +1,5 @@
+package template;
+
 public class QuickSort {
     public static void quickSort(int[] arr) {
         quickSort(arr, 0, arr.length - 1);

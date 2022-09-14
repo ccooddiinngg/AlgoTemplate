@@ -1,3 +1,5 @@
+package template;
+
 public class BinarySearch {
     public static int findLessEqual(int[] arr, int tar) {
         int i = 0;

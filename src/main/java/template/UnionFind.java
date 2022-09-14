@@ -1,3 +1,5 @@
+package template;
+
 public class UnionFind {
     private int[] p;
 

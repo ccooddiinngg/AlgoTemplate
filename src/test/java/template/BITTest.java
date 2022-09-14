@@ -1,5 +1,8 @@
+package template;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import template.BIT;
 
 class BITTest {
     BIT bit = new BIT(10);

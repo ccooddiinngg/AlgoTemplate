@@ -1,3 +1,5 @@
+package template;
+
 import utils.Edge;
 
 import java.util.PriorityQueue;

@@ -1,3 +1,5 @@
+package template;
+
 public class BIT {
     private int[] p;
     private int n;

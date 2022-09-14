@@ -1,5 +1,8 @@
+package template;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import template.UnionFind;
 
 class UnionFindTest {
     UnionFind unionFind = new UnionFind(10);
