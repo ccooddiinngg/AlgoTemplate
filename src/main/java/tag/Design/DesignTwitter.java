@@ -1,11 +1,11 @@
-package tag.design;
+package tag.Design;
 
 import java.util.*;
 
-class Twitter {
+class DesignTwitter {
     Map<Integer, User> map;
 
-    public Twitter() {
+    public DesignTwitter() {
         this.map = new HashMap<>();
     }
 

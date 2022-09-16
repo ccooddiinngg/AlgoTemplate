@@ -1,4 +1,4 @@
-package tag.design;
+package tag.Design;
 
 import java.util.HashMap;
 import java.util.Map;

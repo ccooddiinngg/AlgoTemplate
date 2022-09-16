@@ -1,4 +1,4 @@
-package tag.design;
+package tag.Design;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
