@@ -9,29 +9,53 @@ public class BinaryTree {
 
     private int idx;
 
-    public BinaryTree(String str) {
+    //0:preorder dfs, 1: bfs
+    public BinaryTree(String str, int method) {
         this.idx = 0;
         String[] strs = str.split(",");
-        this.root = buildTree(strs);
+        if (method == 0) {
+            this.root = buildTreeDFS(strs);
+        }
+        if (method == 1) {
+            buildTreeBFS(strs);
+        }
     }
 
-    public String serialize(TreeNode root) {
+    private void buildTreeBFS(String[] strs) {
+        Queue<TreeNode> q = new LinkedList<>();
+        root = (idx >= strs.length || strs[idx].equals("null")) ? null : new TreeNode(Integer.parseInt(strs[idx]));
+        idx++;
+        if (root != null) {
+            q.offer(root);
+        }
+        while (!q.isEmpty()) {
+            TreeNode curr = q.poll();
+            curr.left = (idx >= strs.length || strs[idx].equals("null")) ? null : new TreeNode(Integer.parseInt(strs[idx]));
+            idx++;
+            curr.right = (idx >= strs.length || strs[idx].equals("null")) ? null : new TreeNode(Integer.parseInt(strs[idx]));
+            idx++;
+            if (curr.left != null) q.offer(curr.left);
+            if (curr.right != null) q.offer(curr.right);
+        }
+    }
+
+    public String serializeDFS(TreeNode root) {
         if (root == null) {
             return "null";
         }
-        String left = serialize(root.left);
-        String right = serialize(root.right);
+        String left = serializeDFS(root.left);
+        String right = serializeDFS(root.right);
         return root.val + "," + left + "," + right;
     }
 
-    private TreeNode buildTree(String[] strs) {
+    private TreeNode buildTreeDFS(String[] strs) {
         if ("null".equals(strs[idx])) {
             idx++;
             return null;
         }
         TreeNode root = new TreeNode(Integer.parseInt(strs[idx++]));
-        TreeNode left = buildTree(strs);
-        TreeNode right = buildTree(strs);
+        TreeNode left = buildTreeDFS(strs);
+        TreeNode right = buildTreeDFS(strs);
         root.left = left;
         root.right = right;
         return root;
