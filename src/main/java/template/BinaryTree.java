@@ -21,6 +21,24 @@ public class BinaryTree {
         }
     }
 
+    public TreeNode find(int val) {
+        t = null;
+        find(root, val);
+        return t;
+    }
+
+    private TreeNode t = null;
+
+    private void find(TreeNode root, int val) {
+        if (root == null || t != null) return;
+        if (root.val == val) {
+            t = root;
+            return;
+        }
+        find(root.left, val);
+        find(root.right, val);
+    }
+
     private void buildTreeBFS(String[] strs) {
         Queue<TreeNode> q = new LinkedList<>();
         root = (idx >= strs.length || strs[idx].equals("null")) ? null : new TreeNode(Integer.parseInt(strs[idx]));
