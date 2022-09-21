@@ -134,25 +134,25 @@ public class BinaryTree {
         return list;
     }
 
-    public List<Integer> bfs() {
-        List<Integer> list = new ArrayList<>();
+    public List<String> bfs(TreeNode root) {
+        List<String> list = new ArrayList<>();
         Deque<TreeNode> q = new LinkedList<>();
-        TreeNode p = this.root;
-        if (p != null) {
-            q.offerLast(p);
-        }
+        q.offerLast(root);
         while (!q.isEmpty()) {
             int size = q.size();
             for (int i = 0; i < size; i++) {
                 TreeNode curr = q.pollFirst();
-                list.add(curr.val);
-                if (curr.left != null) {
+                if (curr == null) {
+                    list.add("null");
+                } else {
+                    list.add(String.valueOf(curr.val));
                     q.offerLast(curr.left);
-                }
-                if (curr.right != null) {
                     q.offerLast(curr.right);
                 }
             }
+        }
+        while (list.get(list.size() - 1).equals("null")) {
+            list.remove(list.size() - 1);
         }
         return list;
     }

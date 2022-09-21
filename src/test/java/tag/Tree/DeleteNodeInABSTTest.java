@@ -16,8 +16,8 @@ class DeleteNodeInABSTTest {
         int key = 3;
         BinaryTree binaryTree = new BinaryTree(s, 1);
         TreeNode root = deleteNodeInABST.deleteNode(binaryTree.root, key);
-        List<Integer> res = binaryTree.bfs();
-        Assertions.assertArrayEquals(new int[]{5, 4, 6, 2, 7}, res.stream().mapToInt(a -> a).toArray());
+        List<String> res = binaryTree.bfs(root);
+        Assertions.assertEquals("[5, 4, 6, 2, null, null, 7]", res.toString());
     }
 
 }
