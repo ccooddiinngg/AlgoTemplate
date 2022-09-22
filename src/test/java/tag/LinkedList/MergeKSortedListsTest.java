@@ -16,8 +16,7 @@ class MergeKSortedListsTest {
             list[i] = new SinglyLinkedList(nums[i]).head;
         }
         ListNode res = mergeKSortedLists.mergeKLists(list);
-        SinglyLinkedList singlyLinkedList = new SinglyLinkedList(res);
-        Assertions.assertArrayEquals(new int[]{1, 1, 2, 3, 4, 4, 5, 6}, singlyLinkedList.print());
+        Assertions.assertArrayEquals(new int[]{1, 1, 2, 3, 4, 4, 5, 6}, res.print());
     }
 
 }
