@@ -11,6 +11,20 @@ public class SinglyLinkedList {
     public SinglyLinkedList() {
     }
 
+    public SinglyLinkedList(ListNode head) {
+        this.head = head;
+    }
+
+    public SinglyLinkedList(int[] nums) {
+        ListNode dummy = new ListNode();
+        ListNode p = dummy;
+        for (int i = 0; i < nums.length; i++) {
+            p.next = new ListNode(nums[i]);
+            p = p.next;
+        }
+        this.head = dummy.next;
+    }
+
     public void insert(int v) {
         ListNode node = new ListNode(v);
         if (this.head == null) {
@@ -24,14 +38,14 @@ public class SinglyLinkedList {
         }
     }
 
-    public List<Integer> print() {
+    public int[] print() {
         List<Integer> list = new ArrayList<>();
         ListNode p = head;
         while (p != null) {
             list.add(p.val);
             p = p.next;
         }
-        return list;
+        return list.stream().mapToInt(a -> a).toArray();
     }
 
     public void reverse() {

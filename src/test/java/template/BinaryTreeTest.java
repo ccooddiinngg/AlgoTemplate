@@ -21,7 +21,7 @@ class BinaryTreeTest {
         assertEquals(List.of(1, 2, 4, 3, 5), binaryTree.preOrder());
         assertEquals(List.of(2, 4, 1, 5, 3), binaryTree.inOrder());
         assertEquals(List.of(4, 2, 5, 3, 1), binaryTree.postOrder());
-        assertEquals(List.of(1, 2, 3, 4, 5), binaryTree.bfs());
+        assertEquals("[1, 2, 3, null, 4, 5]", binaryTree.bfs(binaryTree.root).toString());
     }
 
     @Test
@@ -36,7 +36,7 @@ class BinaryTreeTest {
         assertEquals(List.of(1, 2, 4, 3, 5), binaryTree.preOrder());
         assertEquals(List.of(4, 5, 3, 2, 1), binaryTree.inOrder());
         assertEquals(List.of(5, 3, 4, 2, 1), binaryTree.postOrder());
-        assertEquals(List.of(1, 2, 4, 3, 5), binaryTree.bfs());
+        assertEquals("[1, 2, null, 4, null, null, 3, 5]", binaryTree.bfs(binaryTree.root).toString());
     }
 
 }
