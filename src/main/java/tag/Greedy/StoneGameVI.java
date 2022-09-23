@@ -1,4 +1,4 @@
-package tag.DynamicProgramming;
+package tag.Greedy;
 
 import java.util.Arrays;
 import java.util.Comparator;
