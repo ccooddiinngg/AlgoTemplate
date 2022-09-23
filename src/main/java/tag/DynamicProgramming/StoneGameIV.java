@@ -21,4 +21,21 @@ public class StoneGameIV {
         cache[n] = 2;
         return false;
     }
+
+    
+    /*DP*/
+    public boolean winnerSquareGame1(int n) {
+        boolean[] dp = new boolean[n + 1];
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                int jj = j * j;
+                if (jj > i) break;
+                if (jj == i || !dp[i - jj]) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
 }
