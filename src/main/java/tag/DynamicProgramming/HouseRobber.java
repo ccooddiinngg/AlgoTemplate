@@ -1,0 +1,27 @@
+package tag.DynamicProgramming;
+
+public class HouseRobber {
+    public int rob(int[] nums) {
+        int m = nums.length;
+        int[][] dp = new int[m][2];
+        dp[0][1] = nums[0];
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1]);
+            dp[i][1] = dp[i - 1][0] + nums[i];
+        }
+        return Math.max(dp[m - 1][0], dp[m - 1][1]);
+    }
+
+    /*1D*/
+    public int rob1(int[] nums) {
+        int m = nums.length;
+        int rob = 0;
+        int no = 0;
+        for (int i = 0; i < m; i++) {
+            int t = rob;
+            rob = no + nums[i];
+            no = Math.max(t, no);
+        }
+        return Math.max(rob, no);
+    }
+}
