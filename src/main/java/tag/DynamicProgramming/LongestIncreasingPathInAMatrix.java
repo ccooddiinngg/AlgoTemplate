@@ -1,4 +1,4 @@
-package tag.Graph;
+package tag.DynamicProgramming;
 
 import java.util.Arrays;
 
@@ -25,9 +25,9 @@ public class LongestIncreasingPathInAMatrix {
     int bt(int[][] matrix, int m, int n, int x, int y) {
         if (cache[x][y] != -1) return cache[x][y];
         int next = 0;
-        for (int[] d : dir) {
-            int x1 = x + d[0];
-            int y1 = y + d[1];
+        for (int i = 0; i < dir.length; i++) {
+            int x1 = x + dir[i][0];
+            int y1 = y + dir[i][1];
             if (x1 >= 0 && x1 < m && y1 >= 0 && y1 < n && matrix[x1][y1] > matrix[x][y]) {
                 next = Math.max(next, bt(matrix, m, n, x1, y1));
             }
