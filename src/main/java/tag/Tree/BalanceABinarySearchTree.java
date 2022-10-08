@@ -73,19 +73,15 @@ public class BalanceABinarySearchTree {
             setHeight(x, Math.max(height(x.left), height(x.right)) + 1);
             int balance = getBalance(x);
             if (balance > 1) {
-                if (height(x.left.left) > height(x.left.right)) {
-                    return rightRotate(x);
-                } else {
+                if (height(x.left.left) <= height(x.left.right)) {
                     x.left = leftRotate(x.left);
-                    return rightRotate(x);
                 }
+                return rightRotate(x);
             } else if (balance < -1) {
-                if (height(x.right.right) > height(x.right.left)) {
-                    return leftRotate(x);
-                } else {
+                if (height(x.right.right) <= height(x.right.left)) {
                     x.right = rightRotate(x.right);
-                    return leftRotate(x);
                 }
+                return leftRotate(x);
             } else {
                 return x;
             }
