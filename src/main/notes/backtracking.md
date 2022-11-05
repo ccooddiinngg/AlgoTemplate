@@ -291,6 +291,91 @@ class Solution {
 }
 ```
 
+### 51N皇后
+```java
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        col = new boolean[n];
+        d1 = new boolean[n * 2];
+        d2 = new boolean[n * 2];
+        List<List<String>> list = new ArrayList<>();
+        bt(n, 0, new ArrayList<>(), list);
+        return list;
+    }
+
+    boolean[] col;
+    boolean[] d1;
+    boolean[] d2;
+
+    void bt(int n, int x, List<Integer> board, List<List<String>> list) {
+        if (x == n) {
+            // System.out.println(board);
+            List<String> rows = new ArrayList<>();
+            for (int p: board) {
+                String[] row = new String[n];
+                Arrays.fill(row, ".");
+                row[p] = "Q";
+                rows.add(String.join("", row));
+            }
+            list.add(rows);
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            if (col[i] || d1[x + i] || d2[n + x - i]) {
+                continue;
+            }
+            col[i] = true;
+            d1[x + i] = true;
+            d2[n + x - i] = true;
+            board.add(i);
+            bt(n, x + 1, board, list);
+            board.remove(board.size() - 1);
+            col[i] = false;
+            d1[x + i] = false;
+            d2[n + x - i] = false;
+        }
+    }
+}
+```
+
+### 52N皇后II
+```java
+class Solution {
+    public int totalNQueens(int n) {
+        col = new boolean[n];
+        d1 = new boolean[n * 2];
+        d2 = new boolean[n * 2];
+        return bt(n, 0);
+    }
+
+    boolean[] col;
+    boolean[] d1;
+    boolean[] d2;
+
+    int bt(int n, int x) {
+        if (x == n) {
+            return 1;
+        }
+        int next = 0;
+        for (int i = 0; i < n; i++) {
+            if (col[i] || d1[x + i] || d2[n + x - i]) {
+                continue;
+            }
+            col[i] = true;
+            d1[x + i] = true;
+            d2[n + x - i] = true;
+            next += bt(n, x + 1);
+            col[i] = false;
+            d1[x + i] = false;
+            d2[n + x - i] = false;
+        }
+        return next;
+    }
+}
+```
+
+
+
 
 
 
