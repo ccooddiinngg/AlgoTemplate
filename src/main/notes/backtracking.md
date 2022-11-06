@@ -374,6 +374,130 @@ class Solution {
 }
 ```
 
+### 60排列序列
+```java
+class Solution {
+    public String getPermutation(int n, int k) {
+		int[] nums = new int[n];
+		int count = 1;
+		for (int i = 1; i <= n; i++) {
+			nums[i - 1] = i;
+			count *= i;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		while (n > 0) {
+            //每组的个数
+			count /= n;
+            //第几组
+			int idx = (k - 1) / count;
+			k -= idx * count;
+            //找到第几个数
+			int i = 0;
+			while (idx >= 0) {
+				if (nums[i] != 0) {
+					idx--;
+					if (idx < 0) {
+						break;
+					}
+				}
+				i++;
+			}
+			sb.append(nums[i]);
+			nums[i] = 0;
+			n--;
+		}
+		return sb.toString();
+	}
+}
+```
+
+### 77组合
+```java
+class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> list = new ArrayList<>();
+        bt(n, 1, k, new ArrayList<>(), list);
+        return list;
+    }
+
+    void bt(int n, int idx, int k, List<Integer> path, List<List<Integer>> list) {
+        if (path.size() == k) {
+            list.add(new ArrayList<>(path));
+            return;
+        }
+        if (idx == n + 1) return;
+        for (int i = idx; i <= n; i++) {
+            path.add(i);
+            bt(n, i + 1, k, path, list);
+            path.remove(path.size() - 1);
+        }
+    }
+}
+```
+
+### 78子集
+```java
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> list = new ArrayList<>();
+        bt(nums, 0, new ArrayList<>(), list);
+        return list;
+    }
+
+    void bt(int[] nums, int idx, List<Integer> path, List<List<Integer>> list) {
+        if (idx == nums.length) {
+            list.add(new ArrayList<>(path));
+            return;
+        }
+        bt(nums, idx + 1, path, list);
+        path.add(nums[idx]);
+        bt(nums, idx + 1, path, list);
+        path.remove(path.size() - 1);
+    }
+}
+```
+
+### 79单词搜索
+```java
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (bt(board, i, j, word, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    int[][] dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    boolean bt(char[][] board, int x, int y, String word, int idx) {
+        if (board[x][y] != word.charAt(idx)) {
+            return false;
+        }
+        if (idx == word.length() - 1) {
+            return true;
+        }
+        char t = board[x][y];
+        board[x][y] = '.';
+        for (int i = 0; i < dir.length; i++) {
+            int x1 = x + dir[i][0];
+            int y1 = y + dir[i][1];
+            if (x1 >= 0 && x1 < board.length && y1 >= 0 && y1 < board[0].length && board[x1][y1] != '.') {
+                if (bt(board, x1, y1, word, idx + 1)) return true;
+            }
+        }
+        board[x][y] = t;
+        return false;
+    }
+}
+```
+
+
+
 
 
 
