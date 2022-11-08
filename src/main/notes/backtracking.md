@@ -496,6 +496,281 @@ class Solution {
 }
 ```
 
+### 90子集II
+```java
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> list = new ArrayList<>();
+        bt(nums, 0, true, new ArrayList<>(), list);
+        return list;
+    }
+
+    void bt(int[] nums, int idx, boolean pre, List<Integer> path, List<List<Integer>> list) {
+        if (idx == nums.length) {
+            list.add(new ArrayList<>(path));
+            return;
+        }
+        if (idx > 0 && nums[idx] == nums[idx - 1] && pre) {
+
+        }else {
+            bt(nums, idx + 1, false, path, list);
+        }
+        path.add(nums[idx]);
+        bt(nums, idx + 1, true, path, list);
+        path.remove(path.size() - 1);
+    }
+}
+```
+
+### 93复原IP地址
+```java
+class Solution {
+    public List<String> restoreIpAddresses(String s) {
+        List<String> list = new ArrayList<>();
+        bt(s, 0, new ArrayList<>(), list);
+        return list;
+    }
+
+    void bt(String s, int idx, List<String> path, List<String> list) {
+        if (idx == s.length()) {
+            if (path.size() == 4) {
+                list.add(String.join(".", path));
+            }
+            return;
+        }
+        if (s.charAt(idx) == '0') {
+            path.add("0");
+            bt(s, idx + 1, path, list);
+            path.remove(path.size() - 1);
+            return;
+        }
+        for (int i = idx + 1; i <= idx + 3 && i <= s.length(); i++) {
+            int num = Integer.parseInt(s.substring(idx, i));
+            if (num <= 255) {
+                path.add(num + "");
+                bt(s, i, path, list);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+}
+```
+
+### 131分割回文串
+```java
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> list = new ArrayList<>();
+        bt(s, 0, new ArrayList<>(), list);
+        return list;
+    }
+
+    void bt(String s, int idx, List<String> path, List<List<String>> list) {
+        if (idx == s.length()) {
+            list.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = idx + 1; i <= s.length(); i++) {
+            String str = s.substring(idx, i);
+            if (isPal(str)) {
+                path.add(str);
+                bt(s, i, path, list);
+                path.remove(path.size() - 1);
+            } 
+        }
+    }
+
+    boolean isPal(String str) {
+        int i = 0;
+        int j = str.length() - 1;
+        while (i < j) {
+            if (str.charAt(i) != str.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+}
+```
+
+### 140单词拆分II
+```java
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        Set<String> dict = new HashSet<>();
+        for (String word: wordDict) {
+            dict.add(word);
+        }
+        List<String> list = new ArrayList<>();
+        bt(s, 0, dict, new ArrayList<>(), list);
+        return list;
+    }
+
+    void bt(String s, int idx, Set<String> dict, List<String> path, List<String> list) {
+        if (idx == s.length()) {
+            list.add(String.join(" ", path));
+            return;
+        }
+        for (int i = idx + 1; i <= s.length(); i++) {
+            String str = s.substring(idx, i);
+            if (dict.contains(str)) {
+                path.add(str);
+                bt(s, i, dict, path, list);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+}
+```
+
+### 212单词搜索II
+```java
+class Solution {
+    Trie root = new Trie();
+
+    class Trie {
+        Trie[] next = new Trie[26];
+        String word = null;
+    }
+
+    public void insert(String s) {
+        Trie p = root;
+        for (int i = 0; i < s.length(); i++) {
+            int idx = s.charAt(i) - 'a';
+            if (p.next[idx] == null) {
+                p.next[idx] = new Trie();
+            }
+            p = p.next[idx];
+        }
+        p.word = s;
+    }
+
+    public List<String> findWords(char[][] board, String[] words) {
+        Set<String> set = new HashSet<>();
+        for (String word: words) {
+            insert(word);
+            set.add(word);
+        }
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                bt(board, i, j, root, set, list);
+            }
+        } 
+        return list;
+    }
+
+    void bt(char[][] board, int x, int y, Trie p, Set<String> set, List<String> list) {
+        if (p == null || x < 0 || x >= board.length || y < 0 || y >= board[0].length || board[x][y] == '.') {
+            return;
+        }
+        char c = board[x][y];
+        int idx = c - 'a';
+        Trie _p = p.next[idx];
+        if (_p == null) return;
+        if (_p.word != null && set.contains(_p.word)) {
+            list.add(_p.word);
+            set.remove(_p.word);
+        }
+        board[x][y] = '.';
+        bt(board, x + 1, y, _p, set, list);
+        bt(board, x - 1, y, _p, set, list);
+        bt(board, x, y + 1, _p, set, list);
+        bt(board, x, y - 1, _p, set, list);
+        board[x][y] = c;
+    }
+}
+```
+
+### 216组合总和III
+```java
+class Solution {
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> list = new ArrayList<>();
+        bt(n, k, 1, new ArrayList<>(), list);
+        return list;
+    }
+
+    void bt(int rest, int k, int curr, List<Integer> path, List<List<Integer>> list) {
+        if (k == 0) {
+            if (rest == 0) {
+                list.add(new ArrayList<>(path));
+            }
+            return;
+        }
+        for (int i = curr; i <= 9 && i <= rest; i++) {
+            path.add(i);
+            bt(rest - i, k - 1, i + 1, path, list);
+            path.remove(path.size() - 1);
+        }
+    } 
+}
+```
+
+### 306累加数
+```java
+class Solution {
+    public boolean isAdditiveNumber(String num) {
+        for (int i = 1; i < num.length() - 1; i++) {
+            for (int j = i + 1; j < num.length(); j++) {
+                String sa = num.substring(0, i);
+                String sb = num.substring(i, j);
+                if ((sa.length() > 1 && sa.charAt(0) == '0') || (sb.length() > 1 && sb.charAt(0) == '0')) {
+                    continue;
+                }
+                if (bt(num, sa, sb, j)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean bt(String num, String sa, String sb, int idx) {
+        if (idx == num.length()) {
+            return true;
+        }
+        for (int i = idx + 1; i <= num.length(); i++) {
+            String sc = num.substring(idx, i);
+            if (sc.length() > 1 && sc.charAt(0) == '0') {
+                return false;
+            }
+            if (sc.equals(add(sa, sb))) {
+                if (bt(num, sb, sc, i)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    String add(String sa, String sb) {
+        StringBuilder res = new StringBuilder();
+        int i = sa.length() - 1;
+        int j = sb.length() - 1;
+        int carry = 0;
+        while (i >= 0 || j >= 0 || carry > 0) {
+            int a = i >= 0 ? (sa.charAt(i) - '0') : 0;
+            int b = j >= 0 ? (sb.charAt(j) - '0') : 0;
+            int c = a + b + carry;
+            carry = c / 10;
+            res.insert(0, c % 10);
+            i--;
+            j--;
+        }
+        return res.toString();
+    }
+}
+```
+
+
+
+
+
+
 
 
 
