@@ -766,6 +766,143 @@ class Solution {
 }
 ```
 
+### 401二进制手表
+```java
+class Solution {
+    public List<String> readBinaryWatch(int turnedOn) {
+        List<String> list = new ArrayList<>();
+        
+        for (int i = 0; i <= turnedOn; i++) {
+            int j = turnedOn - i;
+            List<Integer> hours = new ArrayList<>();
+            bt(1, 8, i, 0, hours);
+            List<Integer> minutes = new ArrayList<>();
+            bt(1, 32, j, 0, minutes);
+            combineToString(hours, minutes, list);
+        }
+
+        return list;
+    }
+
+    void bt(int bit, int max, int count, Integer path, List<Integer> list) {
+        if (count == 0) {
+            list.add(path);
+            return;
+        }
+        if (bit > max) {
+            return;
+        }
+        bt(bit * 2, max, count, path, list);
+        path += bit;
+        bt(bit * 2, max, count - 1, path, list);
+        path -= bit;
+    }
+
+    void combineToString(List<Integer> hours, List<Integer> minutes, List<String> list) {
+        for (int h: hours) {
+            for (int m: minutes) {
+                if (h > 11 || m > 59) continue;
+                String hour = String.valueOf(h);
+                String min = String.valueOf(m);
+                if (min.length() == 1) {
+                    min = "0" + min;
+                }
+                StringBuilder sb = new StringBuilder();
+                sb.append(hour).append(":").append(min);
+                list.add(sb.toString());
+            }
+        }
+    }
+}
+```
+
+### 526优美的排列
+```java
+class Solution {
+    public int countArrangement(int n) {
+        int[] nums = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            nums[i] = i;
+        }
+        return bt(nums, 1);
+    }
+
+    int bt(int[] nums, int idx) {
+        if (idx == nums.length) {
+            return 1;
+        }
+        int res = 0;
+        for (int i = idx; i < nums.length; i++) {
+            if (nums[i] % idx == 0 || idx % nums[i] == 0) {
+                swap(nums, i, idx);
+                res += bt(nums, idx + 1);
+                swap(nums, i, idx);
+            }
+        }
+        return res;
+    }
+
+    void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+}
+```
+
+### 980不同路径 III
+```java
+class Solution {
+    int startX = 0;
+    int startY = 0;
+    int endX = 0;
+    int endY = 0;
+
+    public int uniquePathsIII(int[][] grid) {
+        int rest = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) {
+                    startX = i;
+                    startY = j;
+                }
+                if (grid[i][j] == 2) {
+                    endX = i;
+                    endY = j;
+                }
+                if (grid[i][j] == 0) {
+                    rest++;
+                }
+            }
+        }
+        return bt(grid, startX, startY, rest);
+    }
+
+    int bt(int[][] grid, int x, int y, int rest) {
+        if (x < 0 || x >= grid.length || y < 0 || y >= grid[0].length || grid[x][y] == -1) {
+            return 0;
+        }
+        if (x == endX && y == endY) {
+            if (rest == -1) {
+                return 1;
+            }
+            return 0;
+        }
+        int t = grid[x][y];
+        grid[x][y] = -1;
+        int res = 0;
+        res += bt(grid, x + 1, y, rest - 1);
+        res += bt(grid, x - 1, y, rest - 1);
+        res += bt(grid, x, y + 1, rest - 1);
+        res += bt(grid, x, y - 1, rest - 1);
+        grid[x][y] = t;
+        return res;
+    }
+}
+```
+
+
+
 
 
 
