@@ -86,6 +86,7 @@ class LRUCache {
  * obj.put(key,value);
  */
 ```
+>双链表 + HashMap
 
 ### 155最小栈
 ```java
@@ -499,6 +500,57 @@ class MedianFinder {
 ```
 >保证q2的size不会比q1大1, q1的size不会比q2大
 
+### 297二叉树的序列化与反序列化
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        return ser(root);
+    }
+
+    private String ser(TreeNode root) {
+        if (root == null) {
+            return "null";
+        }
+        return String.valueOf(root.val) + "," + ser(root.left) + "," + ser(root.right);
+    }
+
+    // Decodes your encoded data to tree.
+    int idx = 0;
+    public TreeNode deserialize(String data) {
+        String[] str = data.split(",");
+        return des(str);
+    }
+
+    private TreeNode des(String[] str) {
+        if ("null".equals(str[idx])) {
+            idx++;
+            return null;
+        }
+        TreeNode root = new TreeNode(Integer.parseInt(str[idx++]));
+        root.left = des(str);
+        root.right = des(str);
+        return root;
+    }
+}
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// TreeNode ans = deser.deserialize(ser.serialize(root));
+```
+>前序遍历, 用逗号分隔, 空节点用null表示
+
 ### 307区域和检索 - 数组可修改
 ```java
 class NumArray {
@@ -552,3 +604,221 @@ class NumArray {
  */
 ```
 
+### 341扁平化嵌套列表迭代器
+```java
+/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *
+ *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds, if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // @return the nested list that this NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this NestedInteger holds a single integer
+ *     public List<NestedInteger> getList();
+ * }
+ */
+public class NestedIterator implements Iterator<Integer> {
+    List<Integer> list;
+    Iterator<Integer> it;
+
+    public NestedIterator(List<NestedInteger> nestedList) {
+        this.list = new ArrayList<>();
+        flat(nestedList, list);
+        this.it = list.iterator();
+    }
+
+    private void flat(List<NestedInteger> nestedList, List<Integer> list) {
+        for (NestedInteger ni: nestedList) {
+            if (ni.isInteger()) {
+                list.add(ni.getInteger());
+            }else {
+                flat(ni.getList(), list);
+            }
+        }
+    }
+
+    @Override
+    public Integer next() {
+        return it.next();
+    }
+
+    @Override
+    public boolean hasNext() {
+        return it.hasNext();
+    }
+}
+
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i = new NestedIterator(nestedList);
+ * while (i.hasNext()) v[f()] = i.next();
+ */
+```
+>用list存储所有的整数, 然后用迭代器遍历
+
+### 355设计推特
+```java
+class Twitter {
+    Map<Integer, User> map = new HashMap<>();
+    public Twitter() {
+
+    }
+
+    private User getUser(int userId) {
+        if (!map.containsKey(userId)) {
+            map.put(userId, new User(userId));
+        }
+        return map.get(userId);
+    }
+    
+    public void postTweet(int userId, int tweetId) {
+        User user = getUser(userId);
+        user.post(tweetId);
+    }
+    
+    public List<Integer> getNewsFeed(int userId) {
+        User user = getUser(userId);
+        return user.getNewsFeed(10);
+    }
+    
+    public void follow(int followerId, int followeeId) {
+        User follower = getUser(followerId);
+        User followee = getUser(followeeId);
+        follower.follow(followeeId);
+    }
+    
+    public void unfollow(int followerId, int followeeId) {
+        User follower = getUser(followerId);
+        User followee = getUser(followeeId);
+        follower.unfollow(followeeId);
+    }
+
+    class User {
+        int userId;
+        Set<Integer> followees;
+        Tweet head;
+
+        public User(int userId) {
+            this.userId = userId;
+            this.followees = new HashSet<>();
+            this.followees.add(userId);
+            this.head = null;
+        }
+
+        public void follow(int followeeId) {
+            followees.add(followeeId);
+        }
+
+        public void unfollow(int followeeId) {
+            followees.remove(followeeId);
+        }
+
+        public void post(int tweetId) {
+            Tweet tweet = new Tweet(this.userId, tweetId);
+            tweet.next = head;
+            head = tweet;
+        }
+
+        public List<Integer> getNewsFeed(int count) {
+            List<Integer> list = new ArrayList<>();
+            Queue<Tweet> q = new PriorityQueue<>((a, b) -> b.timestamp - a.timestamp);
+            for (int followeeId: followees) {
+                User followee = getUser(followeeId);
+                if (followee.head != null) {
+                    q.offer(followee.head);
+                }
+            }
+            while (list.size() < count && !q.isEmpty()) {
+                Tweet head = q.poll();
+                list.add(head.tweetId);
+                if (head.next != null) {
+                    q.offer(head.next);
+                }
+            }
+            return list;
+        }
+    }
+
+    int time = 0;
+    class Tweet {
+        int tweetId;
+        int userId;
+        int timestamp;
+        Tweet next;
+
+        public Tweet(int userId, int tweetId) {
+            this.userId = userId;
+            this.tweetId = tweetId;
+            this.timestamp = time++;
+            this.next = null;
+        }
+    }
+}
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter obj = new Twitter();
+ * obj.postTweet(userId,tweetId);
+ * List<Integer> param_2 = obj.getNewsFeed(userId);
+ * obj.follow(followerId,followeeId);
+ * obj.unfollow(followerId,followeeId);
+ */
+```
+>用一个map存储所有的用户, 每个用户有一个set存储关注的人, 一个链表存储自己的推文, 每次获取新闻时, 遍历所有关注的人的链表, 把所有的推文放到一个优先队列中, 优先队列按照时间戳排序, 每次取一个, 然后把这个推文的下一个推文放到队列中, 直到取够10个或者队列为空
+
+### 380O(1) 时间插入、删除和获取随机元素
+```java
+class RandomizedSet {
+    Map<Integer, Integer> map = new HashMap<>();
+    int[] arr = new int[100000];
+    int size = 0;
+
+    public RandomizedSet() {
+
+    }
+    
+    public boolean insert(int val) {
+        if (map.containsKey(val)) {
+            return false;
+        }
+        arr[size] = val;
+        map.put(val, size);
+        size++;
+        return true;
+    }
+    
+    public boolean remove(int val) {
+        if (!map.containsKey(val)) {
+            return false;
+        }
+        int idx = map.get(val);
+        map.remove(val);
+        if (idx != size - 1) {
+            arr[idx] = arr[size - 1];  
+            map.put(arr[idx], idx);
+        }
+        size--;
+        return true;
+    }
+    
+    public int getRandom() {
+        int r = (int)(Math.random() * size);
+        return arr[r];
+    }
+}
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet obj = new RandomizedSet();
+ * boolean param_1 = obj.insert(val);
+ * boolean param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
+ */
+```
+>用一个map存储每个数的下标, 用一个数组存储所有的数, 每次删除时, 把最后一个数放到删除的位置, 然后更新map中最后一个数的下标
