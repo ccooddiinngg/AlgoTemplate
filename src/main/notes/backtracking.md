@@ -1,4 +1,4 @@
-### 10正则表达式匹配
+### 10 正则表达式匹配
 ```java
 class Solution {
     public boolean isMatch(String s, String p) {
@@ -27,7 +27,7 @@ class Solution {
 }
 ```
 
-### 17电话号码的字母组合
+### 17 电话号码的字母组合
 ```java
 class Solution {
     public List<String> letterCombinations(String digits) {
@@ -55,7 +55,7 @@ class Solution {
 }
 ```
 
-### 22括号生成
+### 22 括号生成
 ```java
 class Solution {
     public List<String> generateParenthesis(int n) {
@@ -83,7 +83,7 @@ class Solution {
 }
 ```
 
-### 37解数独
+### 37 解数独
 ```java
 class Solution {
     public void solveSudoku(char[][] board) {
@@ -138,7 +138,7 @@ class Solution {
 }
 ```
 
-### 39组合总和
+### 39 组合总和
 ```java
 class Solution {
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
@@ -166,7 +166,7 @@ class Solution {
 }
 ```
 
-### 40组合总和II
+### 40 组合总和II
 ```java
 class Solution {
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
@@ -196,7 +196,7 @@ class Solution {
 }
 ```
 
-### 44通配符匹配
+### 44 通配符匹配
 ```java
 class Solution {
     public boolean isMatch(String s, String p) {
@@ -225,7 +225,7 @@ class Solution {
 }
 ```
 
-### 46全排列
+### 46 全排列
 ```java
 class Solution {
     public List<List<Integer>> permute(int[] nums) {
@@ -256,7 +256,7 @@ class Solution {
 }
 ```
 
-### 47全排列II
+### 47 全排列II
 ```java
 class Solution {
     public List<List<Integer>> permuteUnique(int[] nums) {
@@ -291,7 +291,7 @@ class Solution {
 }
 ```
 
-### 51N皇后
+### 51 N皇后
 ```java
 class Solution {
     public List<List<String>> solveNQueens(int n) {
@@ -338,7 +338,7 @@ class Solution {
 }
 ```
 
-### 52N皇后II
+### 52 N皇后II
 ```java
 class Solution {
     public int totalNQueens(int n) {
@@ -374,7 +374,7 @@ class Solution {
 }
 ```
 
-### 60排列序列
+### 60 排列序列
 ```java
 class Solution {
     public String getPermutation(int n, int k) {
@@ -412,7 +412,7 @@ class Solution {
 }
 ```
 
-### 77组合
+### 77 组合
 ```java
 class Solution {
     public List<List<Integer>> combine(int n, int k) {
@@ -436,7 +436,7 @@ class Solution {
 }
 ```
 
-### 78子集
+### 78 子集
 ```java
 class Solution {
     public List<List<Integer>> subsets(int[] nums) {
@@ -458,7 +458,7 @@ class Solution {
 }
 ```
 
-### 79单词搜索
+### 79 单词搜索
 ```java
 class Solution {
     public boolean exist(char[][] board, String word) {
@@ -496,7 +496,7 @@ class Solution {
 }
 ```
 
-### 90子集II
+### 90 子集II
 ```java
 class Solution {
     public List<List<Integer>> subsetsWithDup(int[] nums) {
@@ -523,7 +523,7 @@ class Solution {
 }
 ```
 
-### 93复原IP地址
+### 93 复原IP地址
 ```java
 class Solution {
     public List<String> restoreIpAddresses(String s) {
@@ -557,7 +557,7 @@ class Solution {
 }
 ```
 
-### 131分割回文串
+### 131 分割回文串
 ```java
 class Solution {
     public List<List<String>> partition(String s) {
@@ -596,7 +596,7 @@ class Solution {
 }
 ```
 
-### 140单词拆分II
+### 140 单词拆分II
 ```java
 class Solution {
     public List<String> wordBreak(String s, List<String> wordDict) {
@@ -626,7 +626,7 @@ class Solution {
 }
 ```
 
-### 212单词搜索II
+### 212 单词搜索II
 ```java
 class Solution {
     Trie root = new Trie();
@@ -685,7 +685,7 @@ class Solution {
 }
 ```
 
-### 216组合总和III
+### 216 组合总和III
 ```java
 class Solution {
     public List<List<Integer>> combinationSum3(int k, int n) {
@@ -710,7 +710,7 @@ class Solution {
 }
 ```
 
-### 306累加数
+### 306 累加数
 ```java
 class Solution {
     public boolean isAdditiveNumber(String num) {
@@ -766,7 +766,7 @@ class Solution {
 }
 ```
 
-### 401二进制手表
+### 401 二进制手表
 ```java
 class Solution {
     public List<String> readBinaryWatch(int turnedOn) {
@@ -816,7 +816,7 @@ class Solution {
 }
 ```
 
-### 526优美的排列
+### 526 优美的排列
 ```java
 class Solution {
     public int countArrangement(int n) {
@@ -850,7 +850,7 @@ class Solution {
 }
 ```
 
-### 980不同路径 III
+### 980 不同路径 III
 ```java
 class Solution {
     int startX = 0;
