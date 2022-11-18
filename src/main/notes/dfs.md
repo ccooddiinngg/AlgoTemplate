@@ -1,5 +1,3 @@
-### 1020 飞地的数量
-[1020. Number of Enclaves](https://leetcode.com/problems/number-of-enclaves/)
 [1020. 飞地的数量](https://leetcode-cn.com/problems/number-of-enclaves/)
 ```java
 class Solution {

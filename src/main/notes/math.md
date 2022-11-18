@@ -1,4 +1,4 @@
-### 357 统计各位数字都不同的数字个数
+[357. 统计各位数字都不同的数字个数](https://leetcode.cn/problems/count-numbers-with-unique-digits/)
 ```java
 class Solution {
     public int countNumbersWithUniqueDigits(int n) {

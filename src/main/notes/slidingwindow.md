@@ -1,5 +1,3 @@
-### 3 无重复字符的最长子串
-[3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
 [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 ```java
 class Solution {
@@ -25,8 +23,6 @@ class Solution {
 ```
 >发现有重复的字符c，找到c的位置idx, 把(pre,idx]之间的字符都移除掉，然后更新pre的值，max的值，最后把当前字符和下标放入map中
 
-### 76 最小覆盖子串
-[76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
 [76. 最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)
 ```java
 class Solution {
@@ -76,8 +72,6 @@ class Solution {
 }
 ```
 
-### 239 滑动窗口最大值
-[239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 [239. 滑动窗口最大值](https://leetcode-cn.com/problems/sliding-window-maximum/)
 ```java
 class Solution {
@@ -109,8 +103,6 @@ class Solution {
 }
 ```
 
-### 424 替换后的最长重复字符
-[424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
 [424. 替换后的最长重复字符](https://leetcode-cn.com/problems/longest-repeating-character-replacement/)
 ```java
 class Solution {
@@ -139,8 +131,6 @@ class Solution {
 ```
 >滑动窗口，维护一个窗口，窗口内的字符个数减去窗口内出现次数最多的字符的个数，如果小于等于k，那么就可以替换
 
-### 567 字符串的排列
-[567. Permutation in String](https://leetcode.com/problems/permutation-in-string/)
 [567. 字符串的排列](https://leetcode-cn.com/problems/permutation-in-string/)
 ```java
 class Solution {

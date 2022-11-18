@@ -1,5 +1,3 @@
-### 218 天际线问题
-[218. The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/)
 [218. 天际线问题](https://leetcode-cn.com/problems/the-skyline-problem/)
 ```java
 class Solution {
@@ -59,8 +57,6 @@ class Solution {
 }
 ```
 
-### 480 滑动窗口中位数
-[480. Sliding Window Median](https://leetcode.com/problems/sliding-window-median/)
 [480. 滑动窗口中位数](https://leetcode-cn.com/problems/sliding-window-median/)
 ```java
 class Solution {
