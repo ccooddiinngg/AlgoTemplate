@@ -30,10 +30,10 @@ class Solution {
 ```java
 class Solution {
 
-    public String minWindow(String s, String t) {
+    public String minWindow(String s, String t1) {
         int[] map = new int[128];
-        for (int i = 0; i < t.length(); i++) {
-            map[t.charAt(i)]++;
+        for (int i = 0; i < t1.length(); i++) {
+            map[t1.charAt(i)]++;
         }
         int sum = 0;
         for (int v : map) {
@@ -197,4 +197,5 @@ class Solution {
 }
 ```
 
-> 记录s1中每个字符的频率, 在s2上滑动窗口, 如果r字符频率大于0, 扩大窗口, 把r字符频率减1, 否则说明窗口内的字符不满足要求, 把l字符频率加1, 窗口左边界右移. 如果窗口长度等于s1的长度, 说明满足要求, 返回true
+> 记录s1中每个字符的频率, 在s2上滑动窗口, 如果r字符频率大于0, 扩大窗口, 把r字符频率减1, 否则说明窗口内的字符不满足要求,
+> 把l字符频率加1, 窗口左边界右移. 如果窗口长度等于s1的长度, 说明满足要求, 返回true
