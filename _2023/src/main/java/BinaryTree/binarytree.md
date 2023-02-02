@@ -432,3 +432,32 @@ class Solution {
     }
 }
 ```
+
+### 145. Binary Tree Postorder Traversal
+
+```java
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode p = root;
+        TreeNode pre = null;
+        List<Integer> list = new ArrayList<>();
+        while (!stack.isEmpty() || p != null) {
+            while (p != null) {
+                stack.push(p);
+                p = p.left;
+            }
+            p = stack.pop();
+            if (p.right == null || p.right == pre) {
+                list.add(p.val);
+                pre = p;
+                p = null;
+            } else {
+                stack.push(p);
+                p = p.right;
+            }
+        }
+        return list;
+    }
+}
+```
