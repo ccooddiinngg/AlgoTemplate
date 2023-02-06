@@ -1,4 +1,5 @@
 [146. LRU 缓存](https://leetcode-cn.com/problems/lru-cache/)
+
 ```java
 class LRUCache {
 
@@ -86,9 +87,11 @@ class LRUCache {
  * obj.put(key,value);
  */
 ```
->双链表 + HashMap
+
+> 双链表 + HashMap
 
 [155. 最小栈](https://leetcode-cn.com/problems/min-stack/)
+
 ```java
 class MinStack {
     Stack<Integer> s1 = new Stack<>();
@@ -141,6 +144,7 @@ class MinStack {
 ```
 
 [173. 二叉搜索树迭代器](https://leetcode-cn.com/problems/binary-search-tree-iterator/)
+
 ```java
 /**
  * Definition for a binary tree node.
@@ -158,26 +162,26 @@ class MinStack {
  * }
  */
 class BSTIterator {
-    Stack<TreeNode> stack = new Stack<>();
+    Stack<TreeNode> Stack = new Stack<>();
     TreeNode p;
 
     public BSTIterator(TreeNode root) {
         this.p = root;
     }
-    
+
     public int next() {
         while (p != null) {
-            stack.push(p);
+            Stack.push(p);
             p = p.left;
         }
-        p = stack.pop();
+        p = Stack.pop();
         int res = p.val;
         p = p.right;
         return res;
     }
-    
+
     public boolean hasNext() {
-        return !stack.isEmpty() || p != null;
+        return !Stack.isEmpty() || p != null;
     }
 }
 
@@ -190,6 +194,7 @@ class BSTIterator {
 ```
 
 [208. 实现 Trie (前缀树)](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
+
 ```java
 class Trie {
     Node root;
@@ -251,6 +256,7 @@ class Trie {
 ```
 
 [211. 添加与搜索单词 - 数据结构设计](https://leetcode-cn.com/problems/add-and-search-word-data-structure-design/)
+
 ```java
 class WordDictionary {
     Trie root;
@@ -319,6 +325,7 @@ class WordDictionary {
 ```
 
 [225. 用队列实现栈](https://leetcode-cn.com/problems/implement-stack-using-queues/)
+
 ```java
 class MyStack {
     Queue<Integer> q1 = new LinkedList<>();
@@ -371,9 +378,11 @@ class MyStack {
  * boolean param_4 = obj.empty();
  */
 ```
->放的时候, 直接放入q1, 取得时候, q1ToQ2, (只有q1为空的时候, 才会把q2的元素放到q1中), 保证q1中只有一个元素, 即为栈顶元素
+
+> 放的时候, 直接放入q1, 取得时候, q1ToQ2, (只有q1为空的时候, 才会把q2的元素放到q1中), 保证q1中只有一个元素, 即为栈顶元素
 
 [232. 用栈实现队列](https://leetcode-cn.com/problems/implement-queue-using-stacks/)
+
 ```java
 class MyQueue {
     Stack<Integer> s1 = new Stack<>();
@@ -421,9 +430,11 @@ class MyQueue {
  * boolean param_4 = obj.empty();
  */
 ```
->放的时候, 直接放入s1, 取得时候, 从s2中取, (只有s2为空的时候, 才会把s1的元素全部放到s2中)
+
+> 放的时候, 直接放入s1, 取得时候, 从s2中取, (只有s2为空的时候, 才会把s1的元素全部放到s2中)
 
 [284. 顶端迭代器](https://leetcode-cn.com/problems/peeking-iterator/)
+
 ```java
 // Java Iterator interface reference:
 // https://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html
@@ -458,9 +469,11 @@ class PeekingIterator implements Iterator<Integer> {
 	}
 }
 ```
->预读取下一个元素, 用一个变量保存, next()的时候, 直接返回这个变量, 然后再预读取下一个元素
+
+> 预读取下一个元素, 用一个变量保存, next()的时候, 直接返回这个变量, 然后再预读取下一个元素
 
 [295. 数据流的中位数](https://leetcode-cn.com/problems/find-median-from-data-stream/)
+
 ```java
 class MedianFinder {
     Queue<Integer> q1 = new PriorityQueue<>((a, b) -> b - a);
@@ -498,9 +511,11 @@ class MedianFinder {
  * double param_2 = obj.findMedian();
  */
 ```
->保证q2的size不会比q1大1, q1的size不会比q2大
+
+> 保证q2的size不会比q1大1, q1的size不会比q2大
 
 [297. 二叉树的序列化与反序列化](https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/)
+
 ```java
 /**
  * Definition for a binary tree node.
@@ -549,9 +564,11 @@ public class Codec {
 // Codec deser = new Codec();
 // TreeNode ans = deser.deserialize(ser.serialize(root));
 ```
->前序遍历, 用逗号分隔, 空节点用null表示
+
+> 前序遍历, 用逗号分隔, 空节点用null表示
 
 [307. 区域和检索 - 数组可修改](https://leetcode-cn.com/problems/range-sum-query-mutable/)
+
 ```java
 class NumArray {
     int n;
@@ -605,6 +622,7 @@ class NumArray {
 ```
 
 [341. 扁平化嵌套列表迭代器](https://leetcode-cn.com/problems/flatten-nested-list-iterator/)
+
 ```java
 /**
  * // This is the interface that allows for creating nested lists.
@@ -660,9 +678,11 @@ public class NestedIterator implements Iterator<Integer> {
  * while (i.hasNext()) v[f()] = i.next();
  */
 ```
->用list存储所有的整数, 然后用迭代器遍历
+
+> 用list存储所有的整数, 然后用迭代器遍历
 
 [355. 设计推特](https://leetcode-cn.com/problems/design-twitter/)
+
 ```java
 class Twitter {
     Map<Integer, User> map = new HashMap<>();
@@ -770,9 +790,12 @@ class Twitter {
  * obj.unfollow(followerId,followeeId);
  */
 ```
->用一个map存储所有的用户, 每个用户有一个set存储关注的人, 一个链表存储自己的推文, 每次获取新闻时, 遍历所有关注的人的链表, 把所有的推文放到一个优先队列中, 优先队列按照时间戳排序, 每次取一个, 然后把这个推文的下一个推文放到队列中, 直到取够10个或者队列为空
+
+> 用一个map存储所有的用户, 每个用户有一个set存储关注的人, 一个链表存储自己的推文, 每次获取新闻时, 遍历所有关注的人的链表,
+> 把所有的推文放到一个优先队列中, 优先队列按照时间戳排序, 每次取一个, 然后把这个推文的下一个推文放到队列中, 直到取够10个或者队列为空
 
 [380. O(1) 时间插入、删除和获取随机元素](https://leetcode-cn.com/problems/insert-delete-getrandom-o1/)
+
 ```java
 class RandomizedSet {
     Map<Integer, Integer> map = new HashMap<>();
@@ -821,4 +844,5 @@ class RandomizedSet {
  * int param_3 = obj.getRandom();
  */
 ```
->用一个map存储每个数的下标, 用一个数组存储所有的数, 每次删除时, 把最后一个数放到删除的位置, 然后更新map中最后一个数的下标
+
+> 用一个map存储每个数的下标, 用一个数组存储所有的数, 每次删除时, 把最后一个数放到删除的位置, 然后更新map中最后一个数的下标

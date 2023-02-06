@@ -4,14 +4,14 @@
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> list = new ArrayList<>();
-        Stack<TreeNode> stack = new Stack<>();
+        Stack<TreeNode> Stack = new Stack<>();
         TreeNode p = root;
-        while (!stack.isEmpty() || p != null) {
+        while (!Stack.isEmpty() || p != null) {
             while (p != null) {
-                stack.push(p);
+                Stack.push(p);
                 p = p.left;
             }
-            p = stack.pop();
+            p = Stack.pop();
             list.add(p.val);
             p = p.right;
         }
@@ -438,26 +438,626 @@ class Solution {
 ```java
 class Solution {
     public List<Integer> postorderTraversal(TreeNode root) {
-        Stack<TreeNode> stack = new Stack<>();
+        Stack<TreeNode> Stack = new Stack<>();
         TreeNode p = root;
         TreeNode pre = null;
         List<Integer> list = new ArrayList<>();
-        while (!stack.isEmpty() || p != null) {
+        while (!Stack.isEmpty() || p != null) {
             while (p != null) {
-                stack.push(p);
+                Stack.push(p);
                 p = p.left;
             }
-            p = stack.pop();
+            p = Stack.pop();
             if (p.right == null || p.right == pre) {
                 list.add(p.val);
                 pre = p;
                 p = null;
             } else {
-                stack.push(p);
+                Stack.push(p);
                 p = p.right;
             }
         }
         return list;
+    }
+}
+```
+
+### 173. Binary Search Tree Iterator
+
+```java
+class BSTIterator {
+    TreeNode p;
+    Stack<TreeNode> Stack;
+
+    public BSTIterator(TreeNode root) {
+        this.p = root;
+        this.Stack = new Stack<>();
+    }
+
+    public void pre() {
+        while (p != null) {
+            Stack.push(p);
+            p = p.left;
+        }
+    }
+
+    public int next() {
+        pre();
+        p = Stack.pop();
+        int res = p.val;
+        p = p.right;
+        return res;
+    }
+
+    public boolean hasNext() {
+        return !Stack.isEmpty() || p != null;
+    }
+}
+```
+
+### 199. Binary Tree Right Side View
+
+```java
+class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<>();
+        if (root != null) q.offer(root);
+        List<Integer> list = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode curr = q.poll();
+                if (curr.left != null) q.offer(curr.left);
+                if (curr.right != null) q.offer(curr.right);
+                if (i == size - 1) {
+                    list.add(curr.val);
+                }
+            }
+        }
+        return list;
+    }
+}
+```
+
+### 226. Invert Binary Tree
+
+```java
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) return null;
+        TreeNode left = invertTree(root.left);
+        TreeNode right = invertTree(root.right);
+        root.left = right;
+        root.right = left;
+        return root;
+    }
+}
+```
+
+### 230. Kth Smallest Element in a BST
+
+```java
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        Stack<TreeNode> Stack = new Stack<>();
+        TreeNode p = root;
+        while (k > 0) {
+            while (p != null) {
+                Stack.push(p);
+                p = p.left;
+            }
+            p = Stack.pop();
+            k--;
+            if (k == 0) return p.val;
+            p = p.right;
+        }
+        return -1;
+    }
+}
+```
+
+### 236. Lowest Common Ancestor of a Binary Tree
+
+```java
+class Solution {
+    TreeNode ans;
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        helper(root, p, q);
+        return ans;
+    }
+
+    public boolean[] helper(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return new boolean[2];
+        }
+        boolean[] left = helper(root.left, p, q);
+        boolean[] right = helper(root.right, p, q);
+        boolean foundP = left[0] || right[0] || root == p;
+        boolean foundQ = left[1] || right[1] || root == q;
+        if (ans == null && foundP && foundQ) {
+            ans = root;
+        }
+        return new boolean[]{foundP, foundQ};
+    }
+}
+```
+
+### 257. Binary Tree Paths
+
+```java
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> list = new ArrayList<>();
+        if (root != null) helper(root, new ArrayList<>(), list);
+        return list;
+    }
+
+    public void helper(TreeNode root, List<Integer> path, List<String> list) {
+        if (root.left == null && root.right == null) {
+            StringBuilder sb = new StringBuilder();
+            for (Integer p : path) {
+                sb.append(p).append("->");
+            }
+            sb.append(root.val);
+            list.add(sb.toString());
+            return;
+        }
+        path.add(root.val);
+        if (root.left != null) helper(root.left, path, list);
+        if (root.right != null) helper(root.right, path, list);
+        path.remove(path.size() - 1);
+    }
+}
+```
+
+### 297. Serialize and Deserialize Binary Tree
+
+```java
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) {
+            return "null";
+        }
+        return root.val + "," + serialize(root.left) + "," + serialize(root.right);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] strs = data.split(",");
+        return de(strs);
+    }
+
+    int idx = 0;
+
+    public TreeNode de(String[] strs) {
+        if (idx >= strs.length || strs[idx].equals("null")) {
+            idx++;
+            return null;
+        }
+        TreeNode root = new TreeNode(Integer.parseInt(strs[idx++]));
+        root.left = de(strs);
+        root.right = de(strs);
+        return root;
+    }
+}
+```
+
+### 331. Verify Preorder Serialization of a Binary Tree
+
+```java
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        int slots = 1;
+        String[] pre = preorder.split(",");
+        for (int i = 0; i < pre.length; i++) {
+            if (slots <= 0) {
+                return false;
+            }
+            if (pre[i].equals("#")) {
+                slots--;
+            } else {
+                slots++;
+            }
+        }
+        return slots == 0;
+    }
+}
+```
+
+### 337. House Robber III
+
+```java
+class Solution {
+    public int rob(TreeNode root) {
+        int[] res = helper(root);
+        return Math.max(res[0], res[1]);
+    }
+
+    public int[] helper(TreeNode root) {
+        if (root == null) return new int[2];
+        int[] left = helper(root.left);
+        int[] right = helper(root.right);
+        int no = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        int yes = root.val + left[0] + right[0];
+        return new int[]{no, yes};
+    }
+}
+```
+
+### 437. Path Sum III
+
+> dfs, preSum
+
+```java
+class Solution {
+    public int pathSum(TreeNode root, int targetSum) {
+        Map<Long, Integer> map = new HashMap<>();
+        map.put(0L, 1);
+        dfs(root, targetSum, 0, map);
+        return count;
+    }
+
+    int count = 0;
+
+    public void dfs(TreeNode root, int t, long path, Map<Long, Integer> map) {
+        if (root == null) return;
+        path += root.val;
+        if (map.containsKey(path - t)) {
+            count += map.get(path - t);
+        }
+        map.put(path, map.getOrDefault(path, 0) + 1);
+        dfs(root.left, t, path, map);
+        dfs(root.right, t, path, map);
+        map.put(path, map.get(path) - 1);
+    }
+}
+```
+
+### 450. Delete Node in a BST
+
+```java
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) return null;
+        if (root.val == key) {
+            return delete(root);
+        }
+        if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else {
+            root.right = deleteNode(root.right, key);
+        }
+        return root;
+    }
+
+    public TreeNode delete(TreeNode root) {
+        if (root.right == null) {
+            return root.left;
+        }
+        TreeNode p = root.right;
+        while (p.left != null) {
+            p = p.left;
+        }
+        p.left = root.left;
+        return root.right;
+    }
+}
+```
+
+### 513. Find Bottom Left Tree Value
+
+```java
+class Solution {
+
+    public int findBottomLeftValue(TreeNode root) {
+        dfs(root, 0);
+        return tar.val;
+    }
+
+    int max = Integer.MIN_VALUE;
+    TreeNode tar;
+
+    public void dfs(TreeNode root, int h) {
+        if (root.left == null && root.right == null) {
+            if (h > max) {
+                max = h;
+                tar = root;
+            }
+            return;
+        }
+        if (root.left != null) dfs(root.left, h + 1);
+        if (root.right != null) dfs(root.right, h + 1);
+    }
+}
+```
+
+### 543. Diameter of Binary Tree
+
+```java
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        helper(root);
+        return max;
+    }
+
+    int max = 0;
+
+    public int helper(TreeNode root) {
+        if (root.left == null && root.right == null) return 1;
+        int left = root.left != null ? helper(root.left) : 0;
+        int right = root.right != null ? helper(root.right) : 0;
+        max = Math.max(max, left + right);
+        return Math.max(left, right) + 1;
+    }
+}
+```
+
+### 617. Merge Two Binary Trees
+
+```java
+class Solution {
+    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return null;
+        }
+        if (root1 == null) {
+            return root2;
+        }
+        if (root2 == null) {
+            return root1;
+        }
+        TreeNode node = new TreeNode(root1.val + root2.val);
+        node.left = mergeTrees(root1.left, root2.left);
+        node.right = mergeTrees(root1.right, root2.right);
+        return node;
+    }
+}
+```
+
+### 652. Find Duplicate Subtrees
+
+```java
+class Solution {
+    public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        postOrder(root);
+        return list;
+    }
+
+    Map<String, Integer> map = new HashMap<>();
+    List<TreeNode> list = new ArrayList<>();
+
+    public String postOrder(TreeNode root) {
+        if (root == null) {
+            return "#";
+        }
+        String left = postOrder(root.left);
+        String right = postOrder(root.right);
+        String curr = left + "," + right + "," + root.val;
+        map.put(curr, map.getOrDefault(curr, 0) + 1);
+        if (map.get(curr) == 2) {
+            list.add(root);
+        }
+        return curr;
+    }
+}
+```
+
+### 653. Two Sum IV - Input is a BST
+
+```java
+class Solution {
+    public boolean findTarget(TreeNode root, int k) {
+        return dfs(root, k);
+    }
+
+    Set<Integer> set = new HashSet<>();
+
+    public boolean dfs(TreeNode root, int k) {
+        if (root == null) return false;
+        if (set.contains(k - root.val)) {
+            return true;
+        }
+        set.add(root.val);
+        return dfs(root.left, k) || dfs(root.right, k);
+    }
+}
+```
+
+### 669. Trim a Binary Search Tree
+
+```java
+class Solution {
+    public TreeNode trimBST(TreeNode root, int low, int high) {
+        if (root == null) return null;
+        if (root.val < low) {
+            return trimBST(root.right, low, high);
+        }
+        if (root.val > high) {
+            return trimBST(root.left, low, high);
+        }
+        root.left = trimBST(root.left, low, high);
+        root.right = trimBST(root.right, low, high);
+        return root;
+    }
+}
+```
+
+### 703. Kth Largest Element in a Stream
+
+```java
+class KthLargest {
+
+    int[] heap;
+    int k;
+    int size;
+
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        this.heap = new int[k + 1];
+        this.size = 0;
+        for (int num : nums) {
+            add(num);
+        }
+    }
+
+    void up(int idx) {
+        while (heap[idx] < heap[(idx - 1) / 2]) {
+            swap(idx, (idx - 1) / 2);
+            idx = (idx - 1) / 2;
+        }
+    }
+
+    void down(int idx) {
+        while (idx * 2 + 1 < size) {
+            int minIdx = idx * 2 + 1;
+            if (idx * 2 + 2 < size && heap[idx * 2 + 2] < heap[idx * 2 + 1]) {
+                minIdx = idx * 2 + 2;
+            }
+            if (heap[idx] < heap[minIdx]) {
+                break;
+            }
+            swap(idx, minIdx);
+            idx = minIdx;
+        }
+    }
+
+    void offer(int v) {
+        heap[size++] = v;
+        up(size - 1);
+        if (size > k) {
+            poll();
+        }
+    }
+
+    void poll() {
+        heap[0] = heap[size - 1];
+        down(0);
+        size--;
+    }
+
+    int peek() {
+        if (isEmpty()) {
+            return -1;
+        }
+        return heap[0];
+    }
+
+    boolean isEmpty() {
+        return size == 0;
+    }
+
+    void swap(int i, int j) {
+        int t = heap[i];
+        heap[i] = heap[j];
+        heap[j] = t;
+    }
+
+    public int add(int val) {
+        offer(val);
+        return peek();
+    }
+}
+
+```
+
+### 1022. Sum of Root To Leaf Binary Numbers
+
+```java
+class Solution {
+    public int sumRootToLeaf(TreeNode root) {
+        return dfs(root, 0);
+    }
+
+    public int dfs(TreeNode root, int path) {
+        if (root == null) return 0;
+        path = path << 1 | root.val;
+        if (root.left == null && root.right == null) {
+            return path;
+        }
+        return dfs(root.left, path) + dfs(root.right, path);
+    }
+}
+```
+
+### 1382. Balance a Binary Search Tree
+
+> inorder, rebuild tree
+
+```java
+class Solution {
+    public TreeNode balanceBST(TreeNode root) {
+        inOrder(root);
+        return build(list, 0, list.size() - 1);
+    }
+
+    List<TreeNode> list = new ArrayList<>();
+
+    public void inOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left);
+        list.add(root);
+        inOrder(root.right);
+    }
+
+    public TreeNode build(List<TreeNode> list, int l, int r) {
+        if (l > r) {
+            return null;
+        }
+        int mid = l + r >> 1;
+        TreeNode root = list.get(mid);
+        root.left = build(list, l, mid - 1);
+        root.right = build(list, mid + 1, r);
+        return root;
+    }
+}
+```
+
+### 1569. Number of Ways to Reorder Array to Get Same BST
+
+> C[n][k] = C[n-1][k-1] + C[n-1][k]
+
+```java
+class Solution {
+    int MOD = (int) 1e9 + 7;
+    long[][] C;
+
+    public int numOfWays(int[] nums) {
+        int m = nums.length;
+        C = new long[m][m];
+        C[0][0] = 1;
+        for (int i = 1; i < m; i++) {
+            C[i][0] = 1;
+            for (int j = 1; j < m; j++) {
+                C[i][j] = C[i - 1][j - 1] + C[i - 1][j];
+                C[i][j] = C[i][j] % MOD;
+            }
+        }
+        List<Integer> list = new ArrayList<>();
+        for (int num : nums) {
+            list.add(num);
+        }
+        return (int) helper(list) - 1;
+    }
+
+    public long helper(List<Integer> list) {
+        if (list.isEmpty()) return 1;
+        int root = list.get(0);
+        List<Integer> left = new ArrayList<>();
+        List<Integer> right = new ArrayList<>();
+        for (int v : list) {
+            if (v > root) {
+                right.add(v);
+            }
+            if (v < root) {
+                left.add(v);
+            }
+        }
+        return C[left.size() + right.size()][left.size()] * helper(left) % MOD * helper(right) % MOD;
     }
 }
 ```
