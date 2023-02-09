@@ -133,7 +133,7 @@
 │       └── SurroundedRegions.java
 ├── template
 │   ├── AVLTree.java
-│   ├── BIT.java
+│   ├── BitManipulation.java
 │   ├── BinarySearch.java
 │   ├── BinaryTree.java
 │   ├── Graph.java
