@@ -45,6 +45,44 @@ class Solution {
 }
 ```
 
+### 136. Single Number
+
+```java
+class Solution {
+    public int singleNumber(int[] nums) {
+        int res = 0;
+        for (int num : nums) {
+            res = res ^ num;
+        }
+        return res;
+    }
+}
+```
+
+### 137. Single Number II
+
+> count 1
+
+```java
+class Solution {
+    public int singleNumber(int[] nums) {
+        int res = 0;
+        for (int i = 0; i < 32; i++) {
+            int one = 0;
+            for (int num : nums) {
+                if ((num >> i & 1) == 1) {
+                    one++;
+                }
+            }
+            if (one % 3 == 1) {
+                res |= 1 << i;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ### 187. Repeated DNA Sequences
 
 ```java
@@ -176,6 +214,250 @@ class Solution {
             XOR ^= nums[i];
         }
         return XOR;
+    }
+}
+```
+
+### 338. Counting Bits
+
+```java
+class Solution {
+    public int[] countBits(int n) {
+        int[] dp = new int[n + 1];
+        for (int i = 1; i < n + 1; i++) {
+            if ((i & 1) == 0) {
+                dp[i] = dp[i >> 1];
+            } else {
+                dp[i] = dp[i - 1] + 1;
+            }
+        }
+        return dp;
+    }
+}
+```
+
+### 371. Sum of Two Integers
+
+```java
+class Solution {
+    public int getSum(int a, int b) {
+        if (b == 0) return a;
+        return getSum(a ^ b, (a & b) << 1);
+    }
+}
+```
+
+### 401. Binary Watch
+
+```java
+class Solution {
+    public List<String> readBinaryWatch(int turnedOn) {
+        List<String> list = new ArrayList<>();
+        int[] dp = count(60);
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 60; j++) {
+                if (dp[i] + dp[j] == turnedOn) {
+                    list.add(toString(i, j));
+                }
+            }
+        }
+        return list;
+    }
+
+    int[] count(int n) {
+        int[] dp = new int[n + 1];
+        for (int i = 1; i < n + 1; i++) {
+            if ((i & 1) == 1) {
+                dp[i] = dp[i - 1] + 1;
+            } else {
+                dp[i] = dp[i >> 1];
+            }
+        }
+        return dp;
+    }
+
+    String toString(int i, int j) {
+        StringBuilder sb = new StringBuilder();
+        String min = j == 0 ? "00" : j < 10 ? "0" + j : "" + j;
+        return sb.append(i).append(':').append(min).toString();
+    }
+}
+```
+
+```java
+class Solution {
+
+    public List<String> readBinaryWatch(int turnedOn) {
+        int H = 4;
+        int M = 6;
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < H && i <= turnedOn; i++) {
+            List<Integer> hours = new ArrayList<>();
+            dfs(i, H - 1, 0, hours, 11);
+            List<Integer> mins = new ArrayList<>();
+            dfs(turnedOn - i, M - 1, 0, mins, 59);
+            for (int h : hours) {
+                for (int m : mins) {
+                    list.add(toString(h, m));
+                }
+            }
+        }
+        return list;
+    }
+
+    //0000
+    //000000
+    void dfs(int count, int idx, int path, List<Integer> list, int max) {
+        if (path > max) return;
+        if (count == 0) {
+            list.add(path);
+            return;
+        }
+        if (count < 0 || idx == -1) return;
+        dfs(count - 1, idx - 1, path + (1 << idx), list, max);
+        dfs(count, idx - 1, path, list, max);
+    }
+
+    String toString(int hour, int min) {
+        StringBuilder sb = new StringBuilder();
+        String m = min == 0 ? "00" : min < 10 ? "0" + min : min + "";
+        sb.append(hour).append(":").append(m);
+        return sb.toString();
+    }
+}
+```
+
+### 421. Maximum XOR of Two Numbers in an Array
+
+```java
+class Solution {
+    public int findMaximumXOR(int[] nums) {
+        int max = 0;
+        for (int num : nums) {
+            insert(num);
+            Node p = root;
+            int res = 0;
+            for (int i = 30; i >= 0; i--) {
+                int bit = (num >> i & 1);
+                if (p.next[1 - bit] != null) {
+                    res += 1 << i;
+                    p = p.next[1 - bit];
+                } else {
+                    p = p.next[bit];
+                }
+            }
+            max = Math.max(max, res);
+        }
+        return max;
+    }
+
+    Node root = new Node();
+
+    class Node {
+        Node[] next;
+
+        public Node() {
+            next = new Node[2];
+        }
+    }
+
+    void insert(int num) {
+        Node p = root;
+        for (int i = 30; i >= 0; i--) {
+            int bit = (num >> i & 1);
+            if (p.next[bit] == null) {
+                p.next[bit] = new Node();
+            }
+            p = p.next[bit];
+        }
+    }
+
+
+}
+```
+
+### 461. Hamming Distance
+
+```java
+class Solution {
+    public int hammingDistance(int x, int y) {
+        int dis = 0;
+        for (int i = 0; i < 32; i++) {
+            if ((x >> i & 1) != (y >> i & 1)) {
+                dis++;
+            }
+        }
+        return dis;
+    }
+}
+```
+
+### 464. Can I Win
+
+> state 确定的话 curr也就确定了， 所以cache不需要二维数组
+
+```java
+class Solution {
+    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+        if (desiredTotal == 0) return true;
+        if ((1 + maxChoosableInteger) * maxChoosableInteger / 2 < desiredTotal) {
+            return false;
+        }
+        cache = new int[1 << maxChoosableInteger];
+        return dfs(maxChoosableInteger, desiredTotal, 0, 0);
+    }
+
+    int[] cache;
+
+    public boolean dfs(int maxChoosableInteger, int desiredTotal, int curr, int state) {
+        if (cache[state] != 0) return cache[state] == 1;
+        for (int i = 0; i < maxChoosableInteger; i++) {
+            if ((state >> i & 1) == 0) {
+                if (curr + (i + 1) >= desiredTotal || !dfs(maxChoosableInteger, desiredTotal, curr + (i + 1), state + (1 << i))) {
+                    cache[state] = 1;
+                    return true;
+                }
+            }
+        }
+        cache[state] = 2;
+        return false;
+    }
+}
+```
+
+### 476. Number Complement
+
+```java
+class Solution {
+    public int findComplement(int num) {
+        int i = 31;
+        while ((num >> i & 1) == 0) {
+            i--;
+        }
+        return ~num << (31 - i) >> (31 - i);
+    }
+}
+```
+
+### 477. Total Hamming Distance
+
+> 所有数在i位置上为1的个数*为0的个数， 就是在这个位置上贡献的HammingDistance
+
+```java
+class Solution {
+    public int totalHammingDistance(int[] nums) {
+        int m = nums.length;
+        int sum = 0;
+        for (int i = 0; i < 32; i++) {
+            int count = 0;
+            for (int num : nums) {
+                if ((num >> i & 1) == 0) {
+                    count++;
+                }
+            }
+            sum += count * (m - count);
+        }
+        return sum;
     }
 }
 ```

@@ -108,40 +108,44 @@ class Solution {
 }
 ```
 
-### 136. Single Number
+### 473. Matchsticks to Square
 
 ```java
 class Solution {
-    public int singleNumber(int[] nums) {
-        int res = 0;
-        for (int num : nums) {
-            res = res ^ num;
+    public boolean makesquare(int[] matchsticks) {
+        int m = matchsticks.length;
+        if (m < 4) return false;
+        int sum = 0;
+        for (int stick : matchsticks) {
+            sum += stick;
         }
-        return res;
+        if (sum % 4 != 0) return false;
+        int LEN = sum / 4;
+        for (int stick : matchsticks) {
+            if (stick > LEN) return false;
+        }
+        Arrays.sort(matchsticks);
+        return dfs(matchsticks, m - 1, new int[4], LEN);
     }
-}
-```
 
-### 137. Single Number II
-
-> count 1
-
-```java
-class Solution {
-    public int singleNumber(int[] nums) {
-        int res = 0;
-        for (int i = 0; i < 32; i++) {
-            int one = 0;
-            for (int num : nums) {
-                if ((num >> i & 1) == 1) {
-                    one++;
+    public boolean dfs(int[] matchsticks, int idx, int[] group, int LEN) {
+        if (idx < 0) {
+            for (int l : group) {
+                if (l < LEN) return false;
+            }
+            return true;
+        }
+        for (int i = 0; i < group.length; i++) {
+            if (group[i] + matchsticks[idx] <= LEN) {
+                group[i] += matchsticks[idx];
+                if (dfs(matchsticks, idx - 1, group, LEN)) {
+                    return true;
                 }
-            }
-            if (one % 3 == 1) {
-                res |= 1 << i;
+                group[i] -= matchsticks[idx];
             }
         }
-        return res;
+        return false;
     }
+
 }
 ```
