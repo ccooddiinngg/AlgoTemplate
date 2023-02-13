@@ -149,3 +149,38 @@ class Solution {
 
 }
 ```
+
+### 526. Beautiful Arrangement
+
+```java
+class Solution {
+    public int countArrangement(int n) {
+        int[] nums = new int[n + 1];
+        for (int i = 1; i < n + 1; i++) {
+            nums[i] = i;
+        }
+        return dfs(nums, 1);
+    }
+
+    public int dfs(int[] nums, int idx) {
+        if (idx == nums.length) {
+            return 1;
+        }
+        int next = 0;
+        for (int i = idx; i < nums.length; i++) {
+            if (nums[i] % idx == 0 || idx % nums[i] == 0) {
+                swap(nums, i, idx);
+                next += dfs(nums, idx + 1);
+                swap(nums, i, idx);
+            }
+        }
+        return next;
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+}
+```
