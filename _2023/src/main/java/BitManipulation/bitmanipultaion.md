@@ -461,3 +461,91 @@ class Solution {
     }
 }
 ```
+
+### 762. Prime Number of Set Bits in Binary Representation
+
+```java
+class Solution {
+    public int countPrimeSetBits(int left, int right) {
+        int[] dp = new int[right + 1];
+        for (int i = 1; i < right + 1; i++) {
+            if ((i & 1) == 0) {
+                dp[i] = dp[i >> 1];
+            } else {
+                dp[i] = dp[i - 1] + 1;
+            }
+        }
+        Set<Integer> set = getPrime(32);
+        int count = 0;
+        for (int i = left; i <= right; i++) {
+            if (set.contains(dp[i])) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    Set<Integer> getPrime(int n) {
+        Set<Integer> set = new HashSet<>();
+        if (n < 2) return set;
+        boolean[] p = new boolean[n + 1];
+        for (int i = 2; i <= n; i++) {
+            if (!p[i]) {
+                set.add(i);
+                for (int j = 2; j * i < n + 1; j++) {
+                    p[j * i] = true;
+                }
+            }
+        }
+        return set;
+    }
+}
+```
+
+```java
+class Solution {
+    public int countPrimeSetBits(int left, int right) {
+        int count = 0;
+        for (int i = left; i <= right; i++) {
+            int c = count(i);
+            // System.out.println(c);
+            if (isPrime(c)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    int count(int i) {
+        int res = 0;
+        while (i != 0) {
+            i = i & (i - 1);
+            res++;
+        }
+        return res;
+    }
+
+    boolean isPrime(int i) {
+        if (i < 2) return false;
+        // <=
+        for (int j = 2; j <= i / j; j++) {
+            if (i % j == 0) return false;
+        }
+        return true;
+    }
+}
+```
+
+### 1009. Complement of Base 10 Integer
+
+```java
+class Solution {
+    public int bitwiseComplement(int n) {
+        int f1 = 31;
+        while ((n >> f1 & 1) == 0 && f1 > 0) {
+            f1--;
+        }
+        return ~n << (31 - f1) >>> (31 - f1);
+    }
+}
+```
