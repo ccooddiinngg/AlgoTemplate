@@ -13,6 +13,8 @@ class BinaryTreeTest {
         binaryTree.postOrder();
         binaryTree.bfs();
         System.out.println(binaryTree.serialize());
+
+        BinaryTree.prettyPrintTree(binaryTree.root);
     }
 
 }
