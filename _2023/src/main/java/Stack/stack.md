@@ -1,3 +1,30 @@
+### 84. Largest Rectangle in Histogram
+
+> heights[i] 为最高点时产生的面积， 左右找到比它低的最近的点
+
+```java
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int max = 0;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < heights.length; i++) {
+            while (!stack.isEmpty() && heights[stack.peek()] > heights[i]) {
+                int idx = stack.pop();
+                int left = stack.isEmpty() ? -1 : stack.peek();
+                max = Math.max(max, heights[idx] * (i - left - 1));
+            }
+            stack.push(i);
+        }
+        while (!stack.isEmpty()) {
+            int idx = stack.pop();
+            int left = stack.isEmpty() ? -1 : stack.peek();
+            max = Math.max(max, heights[idx] * (heights.length - left - 1));
+        }
+        return max;
+    }
+}
+```
+
 ### 341. Flatten Nested List Iterator
 
 ```java
