@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GraphTest {
+public class CrackingTheSafe {
     public String crackSafe(int n, int k) {
         int bit = (int) Math.pow(10, n - 1);
         dfs(0, bit, k);
