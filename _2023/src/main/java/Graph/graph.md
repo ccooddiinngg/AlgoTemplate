@@ -193,3 +193,102 @@ class Solution {
 
 }
 ```
+
+### 329. Longest Increasing Path in a Matrix
+
+```java
+class Solution {
+    public int longestIncreasingPath(int[][] matrix) {
+        cache = new int[matrix.length][matrix[0].length];
+        for (int[] row : cache) {
+            Arrays.fill(row, -1);
+        }
+        int max = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                max = Math.max(max, dfs(matrix, i, j));
+            }
+        }
+        return max;
+    }
+
+    int[][] dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    int[][] cache;
+
+    public int dfs(int[][] matrix, int x, int y) {
+        if (cache[x][y] != -1) return cache[x][y];
+        int next = 0;
+        for (int i = 0; i < dir.length; i++) {
+            int x1 = x + dir[i][0];
+            int y1 = y + dir[i][1];
+            if (x1 >= 0 && x1 < matrix.length && y1 >= 0 && y1 < matrix[0].length && matrix[x1][y1] > matrix[x][y]) {
+                next = Math.max(next, dfs(matrix, x1, y1));
+            }
+        }
+        cache[x][y] = next + 1;
+        return cache[x][y];
+    }
+}
+```
+
+### 332. Reconstruct Itinerary
+
+```java
+class Solution {
+    Map<String, PriorityQueue<String>> map = new HashMap<>();
+
+    public List<String> findItinerary(List<List<String>> tickets) {
+        for (List<String> t : tickets) {
+            if (!map.containsKey(t.get(0))) {
+                map.put(t.get(0), new PriorityQueue<>());
+            }
+            map.get(t.get(0)).offer(t.get(1));
+        }
+
+        Stack<String> path = new Stack<>();
+        dfs("JFK", path);
+        List<String> res = new ArrayList<>();
+        while (!path.isEmpty()) {
+            res.add(path.pop());
+        }
+        return res;
+    }
+
+    public void dfs(String curr, Stack<String> path) {
+        while (map.containsKey(curr) && map.get(curr).size() > 0) {
+            String next = map.get(curr).poll();
+            dfs(next, path);
+        }
+        path.push(curr);
+    }
+}
+```
+
+### 753. Cracking the Safe
+
+```java
+class Solution {
+    public String crackSafe(int n, int k) {
+        int bit = (int) Math.pow(10, n - 1);
+        dfs(0, bit, k);
+        for (int i = 1; i < n; i++) {
+            path.append("0");
+        }
+        return path.toString();
+    }
+
+    Set<Integer> set = new HashSet<>();
+    StringBuilder path = new StringBuilder();
+
+    public void dfs(int curr, int bit, int k) {
+        for (int i = 0; i < k; i++) {
+            int next = curr * 10 + i;
+            if (!set.contains(next)) {
+                set.add(next);
+                dfs(next % bit, bit, k);
+                path.append(i);
+            }
+        }
+    }
+}
+```
