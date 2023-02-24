@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="_2023" />
+        <module name="_2022" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

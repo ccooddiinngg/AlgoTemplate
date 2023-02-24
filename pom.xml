@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>_2023</module>
+        <module>_2022</module>
     </modules>
     <dependencies>
         <dependency>

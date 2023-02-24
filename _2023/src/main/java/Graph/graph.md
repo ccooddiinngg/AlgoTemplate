@@ -353,3 +353,57 @@ class Solution {
     }
 }
 ```
+
+### 785. Is Graph Bipartite?
+
+> 染色法
+
+```java
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int[] colors = new int[graph.length];
+        for (int i = 0; i < graph.length; i++) {
+            if (colors[i] == 0 && !dfs(graph, i, 1, colors)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean dfs(int[][] g, int curr, int color, int[] colors) {
+        if (colors[curr] == color) return true;
+        if (colors[curr] == 3 - color) return false;
+        colors[curr] = color;
+        for (int i = 0; i < g[curr].length; i++) {
+            if (!dfs(g, g[curr][i], 3 - color, colors)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+### 787. Cheapest Flights Within K Stops
+
+> Bellman-Ford
+
+```java
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        int INF = 0x3f3f3f3f;
+        int[] dist = new int[n];
+        Arrays.fill(dist, INF);
+        dist[src] = 0;
+        for (int i = 0; i < k + 1; i++) {
+            int[] copy = Arrays.copyOf(dist, dist.length);
+            for (int j = 0; j < flights.length; j++) {
+                dist[flights[j][1]] = Math.min(dist[flights[j][1]], copy[flights[j][0]] + flights[j][2]);
+            }
+        }
+        return dist[dst] < INF ? dist[dst] : -1;
+    }
+
+
+}
+```

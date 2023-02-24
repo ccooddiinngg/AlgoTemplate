@@ -442,3 +442,54 @@ class Solution {
     }
 }
 ```
+
+### 765. Couples Holding Hands
+
+> 首先，我们总是以「情侣对」为单位进行设想：
+> 当有两对情侣相互坐错了位置，ta们两对之间形成了一个环。需要进行一次交换，使得每队情侣独立（相互牵手）
+> 如果三对情侣相互坐错了位置，ta们三对之间形成了一个环，需要进行两次交换，使得每队情侣独立（相互牵手）
+> 如果四对情侣相互坐错了位置，ta们四对之间形成了一个环，需要进行三次交换，使得每队情侣独立（相互牵手）
+> 也就是说，如果我们有 k 对情侣形成了错误环，需要交换 k - 1 次才能让情侣牵手。
+> 于是问题转化成 n / 2 对情侣中，有多少个这样的环。
+> 可以直接使用「并查集」来做。
+> 由于 0和1配对、2和3配对 ... 因此互为情侣的两个编号除以 2 对应同一个数字，可直接作为它们的「情侣组」编号
+
+```java
+class Solution {
+    public int minSwapsCouples(int[] row) {
+        int m = row.length;
+        p = new int[m / 2];
+        for (int i = 0; i < p.length; i++) {
+            p[i] = i;
+        }
+        for (int i = 0; i < row.length; i += 2) {
+            //pair [x, y]: x/2 == y/2
+            union(row[i] / 2, row[i + 1] / 2);
+        }
+        int pair = m / 2;
+        int circle = 0;
+        for (int i = 0; i < p.length; i++) {
+            if (i == find(i)) circle++;
+        }
+
+        return pair - circle;
+    }
+
+    int[] p;
+
+    int find(int x) {
+        if (p[x] != x) {
+            p[x] = find(p[x]);
+        }
+        return p[x];
+    }
+
+    void union(int x, int y) {
+        int px = find(x);
+        int py = find(y);
+        if (px != py) {
+            p[px] = py;
+        }
+    }
+}
+```
