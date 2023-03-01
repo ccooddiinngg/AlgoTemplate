@@ -8,14 +8,14 @@ public class CheapestFlightsWithinKStops {
         int[] dist = new int[n];
         Arrays.fill(dist, INF);
         dist[src] = 0;
-        //最多k+1条边
-        for (int i = 0; i < k + 1; i++) {
-            int[] copy = Arrays.copyOf(dist, dist.length);
-            for (int j = 0; j < flights.length; j++) {
-                dist[flights[j][1]] = Math.min(dist[flights[j][1]], copy[flights[j][0]] + flights[j][2]);
+        for (int k1 = 0; k1 < k + 1; k1++) {
+            int[] pre = Arrays.copyOf(dist, dist.length);
+            for (int[] f : flights) {
+                dist[f[1]] = Math.min(dist[f[1]], pre[f[0]] + f[2]);
             }
         }
         return dist[dst] < INF ? dist[dst] : -1;
     }
+
 
 }
