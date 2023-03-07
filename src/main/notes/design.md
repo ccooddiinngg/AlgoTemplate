@@ -627,32 +627,32 @@ class NumArray {
 /**
  * // This is the interface that allows for creating nested lists.
  * // You should not implement it, or speculate about its implementation
- * public interface NestedInteger {
+ * public interface Stack.NestedInteger {
  *
- *     // @return true if this NestedInteger holds a single integer, rather than a nested list.
+ *     // @return true if this Stack.NestedInteger holds a single integer, rather than a nested list.
  *     public boolean isInteger();
  *
- *     // @return the single integer that this NestedInteger holds, if it holds a single integer
- *     // Return null if this NestedInteger holds a nested list
+ *     // @return the single integer that this Stack.NestedInteger holds, if it holds a single integer
+ *     // Return null if this Stack.NestedInteger holds a nested list
  *     public Integer getInteger();
  *
- *     // @return the nested list that this NestedInteger holds, if it holds a nested list
- *     // Return empty list if this NestedInteger holds a single integer
- *     public List<NestedInteger> getList();
+ *     // @return the nested list that this Stack.NestedInteger holds, if it holds a nested list
+ *     // Return empty list if this Stack.NestedInteger holds a single integer
+ *     public List<Stack.NestedInteger> getList();
  * }
  */
 public class NestedIterator implements Iterator<Integer> {
     List<Integer> list;
     Iterator<Integer> it;
 
-    public NestedIterator(List<NestedInteger> nestedList) {
+    public NestedIterator(List<Stack.NestedInteger> nestedList) {
         this.list = new ArrayList<>();
         flat(nestedList, list);
         this.it = list.iterator();
     }
 
-    private void flat(List<NestedInteger> nestedList, List<Integer> list) {
-        for (NestedInteger ni: nestedList) {
+    private void flat(List<Stack.NestedInteger> nestedList, List<Integer> list) {
+        for (Stack.NestedInteger ni: nestedList) {
             if (ni.isInteger()) {
                 list.add(ni.getInteger());
             }else {
@@ -792,7 +792,8 @@ class Twitter {
 ```
 
 > 用一个map存储所有的用户, 每个用户有一个set存储关注的人, 一个链表存储自己的推文, 每次获取新闻时, 遍历所有关注的人的链表,
-> 把所有的推文放到一个优先队列中, 优先队列按照时间戳排序, 每次取一个, 然后把这个推文的下一个推文放到队列中, 直到取够10个或者队列为空
+> 把所有的推文放到一个优先队列中, 优先队列按照时间戳排序, 每次取一个, 然后把这个推文的下一个推文放到队列中,
+> 直到取够10个或者队列为空
 
 [380. O(1) 时间插入、删除和获取随机元素](https://leetcode-cn.com/problems/insert-delete-getrandom-o1/)
 

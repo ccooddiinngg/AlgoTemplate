@@ -5,34 +5,17 @@ import java.util.List;
 import java.util.Stack;
 
 public class MiniParser {
-    interface NestedInteger {
-        void add(NestedInteger ni);
-    }
-
-    class NI implements NestedInteger {
-        public NI() {
-        }
-
-        public NI(int v) {
-
-        }
-
-        @Override
-        public void add(NestedInteger ni) {
-
-        }
-    }
 
     public NestedInteger deserialize(String s) {
         int m = s.length();
         Stack<NestedInteger> stack = new Stack<>();
-        NestedInteger head = new NI();
+        NestedInteger head = new NestedInteger();
         int pre = 0;
         int sign = 1;
         for (int i = 0; i < m; i++) {
             char c = s.charAt(i);
             if (c == '[') {
-                stack.push(new NI());
+                stack.push(new NestedInteger());
                 stack.push(head);
             } else if (c == '-') {
                 sign = -1;
@@ -49,7 +32,7 @@ public class MiniParser {
             } else if (Character.isDigit(c)) {
                 pre = pre * 10 + c - '0';
                 if (i == m - 1 || (i < m - 1 && !Character.isDigit(s.charAt(i + 1)))) {
-                    stack.push(new NI(sign * pre));
+                    stack.push(new NestedInteger(sign * pre));
                     pre = 0;
                     sign = 1;
                 }

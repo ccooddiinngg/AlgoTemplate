@@ -349,7 +349,7 @@ class Solution {
     int[] maxNum(int[] nums, int k) {
         Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < nums.length; i++) {
-            //how many nums i have: nums.length - 1 - i
+            //how many nums left: nums.length - 1 - i
             while (!stack.isEmpty() && stack.peek() < nums[i] && (nums.length - 1 - i + stack.size() >= k)) {
                 stack.pop();
             }
@@ -400,9 +400,37 @@ class Solution {
 }
 ```
 
+### 331. Verify Preorder Serialization of a Binary Tree
+
+```java
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        String[] p = preorder.split(",");
+        Stack<String> stack = new Stack<>();
+        int i = 0;
+        while (i < p.length) {
+            String str = p[i];
+            if (str.equals("#")) {
+                if (!stack.isEmpty() && stack.peek().equals("#")) {
+                    stack.pop();
+                    if (stack.isEmpty()) return false;
+                    stack.pop();
+                    continue;
+                }
+            }
+            stack.push(str);
+            i++;
+        }
+        return stack.size() == 1 && stack.pop().equals("#");
+    }
+}
+```
+
 ### 341. Flatten Nested List Iterator
 
 ```java
+import Stack.NestedInteger;
+
 public class NestedIterator implements Iterator<Integer> {
     Stack<NestedInteger> stack;
 
@@ -432,6 +460,317 @@ public class NestedIterator implements Iterator<Integer> {
             }
             return hasNext();
         }
+    }
+}
+```
+
+### 385. Mini Parser
+
+```java
+class Solution {
+    public NestedInteger deserialize(String s) {
+        int m = s.length();
+        Stack<NestedInteger> stack = new Stack<>();
+        NestedInteger head = new NestedInteger();
+        int pre = 0;
+        int sign = 1;
+        for (int i = 0; i < m; i++) {
+            char c = s.charAt(i);
+            if (c == '[') {
+                stack.push(new NestedInteger());
+                stack.push(head);
+            } else if (c == '-') {
+                sign = -1;
+            } else if (c == ']') {
+                List<NestedInteger> list = new ArrayList<>();
+                while (stack.peek() != head) {
+                    list.add(stack.pop());
+                }
+                //pop head
+                stack.pop();
+                for (int j = list.size() - 1; j >= 0; j--) {
+                    stack.peek().add(list.get(j));
+                }
+            } else if (Character.isDigit(c)) {
+                pre = pre * 10 + c - '0';
+                if (i == m - 1 || (i < m - 1 && !Character.isDigit(s.charAt(i + 1)))) {
+                    stack.push(new NestedInteger(sign * pre));
+                    pre = 0;
+                    sign = 1;
+                }
+            }
+        }
+        return stack.pop();
+    }
+}
+```
+
+### 388. Longest Absolute File Path
+
+> stack存储子树的head,当子树遍历结束后(发现节点的层级高于或等于head的层级),弹出head直到找到正确的head
+
+```java
+class Solution {
+    public int lengthLongestPath(String input) {
+        Stack<Node> stack = new Stack<>();
+        String[] strs = input.split("\n");
+        int max = -1;
+        for (int i = 0; i < strs.length; i++) {
+            String str = strs[i];
+            int l = 0;
+            while (l < str.length() && str.charAt(l) == '\t') {
+                l++;
+            }
+            while (!stack.isEmpty() && stack.peek().level >= l) {
+                stack.pop();
+            }
+            int len = (stack.isEmpty() ? 0 : stack.peek().len) + str.length() - l + 1;
+            if (str.contains(".")) {
+                max = Math.max(max, len);
+            }
+            stack.push(new Node(len, l));
+        }
+        return max == -1 ? 0 : max - 1;
+    }
+
+    class Node {
+        int len;
+        int level;
+
+        public Node(int _len, int _level) {
+            len = _len;
+            level = _level;
+        }
+    }
+}
+```
+
+### 394. Decode String
+
+```java
+class Solution {
+    public String decodeString(String s) {
+        int m = s.length();
+        Stack<Integer> s1 = new Stack<>();
+        Stack<StringBuilder> s2 = new Stack<>();
+        int pre = 0;
+        StringBuilder sb = new StringBuilder();
+        s2.push(sb);
+        for (int i = 0; i < m; i++) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                pre = pre * 10 + c - '0';
+                if (i < m - 1 && !Character.isDigit(s.charAt(i + 1))) {
+                    s1.push(pre);
+                    pre = 0;
+                }
+            } else if (Character.isLetter(c)) {
+                s2.peek().append(c);
+            } else if (c == '[') {
+                s2.push(new StringBuilder());
+            } else if (c == ']') {
+                int k = s1.pop();
+                StringBuilder t = s2.pop();
+                StringBuilder nt = new StringBuilder();
+                while (k > 0) {
+                    nt.append(t);
+                    k--;
+                }
+                s2.peek().append(nt);
+            }
+        }
+        return s2.pop().toString();
+    }
+}
+```
+
+### 402. Remove K Digits
+
+```java
+class Solution {
+    public String removeKdigits(String num, int k) {
+        Stack<Integer> stack = new Stack<>();
+        int m = num.length();
+        for (int i = 0; i < m; i++) {
+            int d = num.charAt(i) - '0';
+            while (!stack.isEmpty() && k > 0 && stack.peek() > d) {
+                stack.pop();
+                k--;
+            }
+            stack.push(d);
+        }
+        while (k > 0) {
+            stack.pop();
+            k--;
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) {
+            sb.insert(0, stack.pop());
+        }
+        while (sb.length() > 0 && sb.charAt(0) == '0') {
+            sb.delete(0, 1);
+        }
+        if (sb.length() == 0) return "0";
+        return sb.toString();
+    }
+}
+```
+
+### 445. Add Two Numbers II
+
+> ArrayDeque instead of Stack
+
+```java
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Deque<Integer> s1 = new ArrayDeque<>();
+        Deque<Integer> s2 = new ArrayDeque<>();
+        int carry = 0;
+        ListNode p1 = l1;
+        ListNode p2 = l2;
+        while (p1 != null) {
+            s1.push(p1.val);
+            p1 = p1.next;
+        }
+        while (p2 != null) {
+            s2.push(p2.val);
+            p2 = p2.next;
+        }
+        ListNode pre = null;
+        while (!s1.isEmpty() || !s2.isEmpty() || carry != 0) {
+            int a = s1.isEmpty() ? 0 : s1.pop();
+            int b = s2.isEmpty() ? 0 : s2.pop();
+            int c = a + b + carry;
+            carry = c / 10;
+            ListNode node = new ListNode(c % 10);
+            node.next = pre;
+            pre = node;
+        }
+        return pre;
+    }
+}
+```
+
+### 456. 132 Pattern
+
+> 从后向前枚举one，栈内元素为Three，弹出的最大值为Two
+> [3,5,0,3,4]
+> i=3 4>> MIN
+> i=2 0,3,4>> MIN
+> i=1 5>> 4
+> i=0 TRUE
+
+```java
+class Solution {
+    public boolean find132pattern(int[] nums) {
+        int m = nums.length;
+        Deque<Integer> s = new ArrayDeque<>();
+        s.push(nums[m - 1]);
+        int two = Integer.MIN_VALUE;
+        // 遍历one, 栈顶为Three
+        for (int i = m - 2; i >= 0; i--) {
+            if (nums[i] < two) return true;
+            while (!s.isEmpty() && s.peek() < nums[i]) {
+                two = s.pop();
+            }
+            s.push(nums[i]);
+        }
+        return false;
+    }
+}
+```
+
+### 921. Minimum Add to Make Parentheses Valid
+
+```java
+class Solution {
+    public int minAddToMakeValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ')' && !stack.isEmpty() && stack.peek() == '(') {
+                stack.pop();
+            } else {
+                stack.push(s.charAt(i));
+            }
+        }
+        return stack.size();
+    }
+}
+```
+
+```java
+class Solution {
+    public int minAddToMakeValid(String s) {
+        int l = 0;
+        int count = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                l++;
+            } else {
+                //消掉一个l
+                if (l > 0) {
+                    l--;
+                } else {
+                    //需要补一个左括号
+                    count++;
+                }
+            }
+        }
+        //需要补几个右括号
+        count += l;
+        return count;
+    }
+}
+```
+
+### 1021. Remove Outermost Parentheses
+
+```java
+class Solution {
+    public String removeOuterParentheses(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == ')') {
+                stack.pop();
+            }
+            //如果栈为空, 表示是最外面一层括号, 不计入结果
+            if (!stack.isEmpty()) {
+                sb.append(c);
+            }
+            if (c == '(') {
+                stack.push(c);
+            }
+        }
+        return sb.toString();
+    }
+}
+```
+
+```java
+class Solution {
+    public String removeOuterParentheses(String s) {
+        int l = 0;
+        int r = 0;
+        int start = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == ')') {
+                r++;
+            } else {
+                l++;
+            }
+            //找到一组Primitive
+            if (l == r) {
+                sb.append(s, start + 1, i);
+                l = 0;
+                r = 0;
+                start = i + 1;
+            }
+        }
+        return sb.toString();
     }
 }
 ```
