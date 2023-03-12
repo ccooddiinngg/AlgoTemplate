@@ -680,6 +680,548 @@ class Solution {
 }
 ```
 
+### 496. Next Greater Element I
+
+```java
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        int m = nums2.length;
+        int[] pre = new int[10010];
+        Arrays.fill(pre, -1);
+        for (int i = 0; i < m; i++) {
+            while (!stack.isEmpty() && nums2[stack.peek()] < nums2[i]) {
+                pre[nums2[stack.pop()]] = nums2[i];
+            }
+            stack.push(i);
+        }
+        int[] ans = new int[nums1.length];
+        for (int i = 0; i < nums1.length; i++) {
+            ans[i] = pre[nums1[i]];
+        }
+        return ans;
+    }
+}
+```
+
+### 503. Next Greater Element II
+
+```java
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        int m = nums.length;
+        Deque<Integer> stack = new ArrayDeque<>();
+        int[] ans = new int[m];
+        //先预设找不到答案的的值
+        Arrays.fill(ans, -1);
+        //取2倍长度
+        for (int i = 0; i < m * 2; i++) {
+            int idx = i % m;
+            while (!stack.isEmpty() && nums[stack.peek()] < nums[idx]) {
+                ans[stack.pop()] = nums[idx];
+            }
+            stack.push(idx);
+        }
+        return ans;
+    }
+}
+```
+
+### 589. N-ary Tree Preorder Traversal
+
+> 出栈的时候先peek，看它的子树是否完全被访问了
+
+```java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+class Solution {
+    public List<Integer> preorder(Node root) {
+        Deque<Node> stack = new ArrayDeque<>();
+        Map<Node, Integer> map = new HashMap<>();
+        List<Integer> list = new ArrayList<>();
+        Node p = root;
+        while (!stack.isEmpty() || p != null) {
+            while (p != null) {
+                stack.push(p);
+                list.add(p.val);
+                //进栈的时候总是去找第一个子树
+                map.put(p, 0);
+                if (p.children != null && p.children.size() > 0) {
+                    p = p.children.get(0);
+                } else {
+                    p = null;
+                }
+            }
+            //看此节点是否遍历完毕, 没有的话继续遍历下一个子树
+            p = stack.peek();
+            if (p.children == null || map.get(p) >= p.children.size() - 1) {
+                stack.pop();
+                p = null;
+            } else {
+                int next = map.get(p) + 1;
+                map.put(p, next);
+                p = p.children.get(next);
+            }
+        }
+        return list;
+    }
+}
+```
+
+> 左前序
+> 先序遍历，从右往左压栈
+
+```java
+class Solution {
+    public List<Integer> preorder(Node root) {
+        Deque<Node> stack = new ArrayDeque<>();
+        List<Integer> list = new ArrayList<>();
+        if (root == null) return list;
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node p = stack.pop();
+            list.add(p.val);
+            for (int i = p.children.size() - 1; i >= 0; i--) {
+                stack.push(p.children.get(i));
+            }
+        }
+        return list;
+    }
+}
+```
+
+### 590. N-ary Tree Postorder Traversal
+
+```java
+class Solution {
+    public List<Integer> postorder(Node root) {
+        Deque<Node> stack = new ArrayDeque<>();
+        Map<Node, Integer> map = new HashMap<>();
+        List<Integer> list = new ArrayList<>();
+        Node p = root;
+        while (!stack.isEmpty() || p != null) {
+            while (p != null) {
+                stack.push(p);
+                map.put(p, 0);
+                if (p.children != null && p.children.size() > 0) {
+                    p = p.children.get(0);
+                } else {
+                    p = null;
+                }
+            }
+            p = stack.peek();
+            if (p.children == null || map.get(p) >= p.children.size() - 1) {
+                p = stack.pop();
+                list.add(p.val);
+                p = null;
+            } else {
+                map.put(p, map.get(p) + 1);
+                p = p.children.get(map.get(p));
+            }
+        }
+        return list;
+    }
+}
+```
+
+> 右前序的逆序
+> 先序遍历(从左往右压栈)，再逆序输出
+
+```java
+class Solution {
+    public List<Integer> postorder(Node root) {
+        Deque<Node> stack = new ArrayDeque<>();
+        List<Integer> list = new ArrayList<>();
+        if (root == null) return list;
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node p = stack.pop();
+            list.add(p.val);
+            for (int i = 0; i < p.children.size(); i++) {
+                stack.push(p.children.get(i));
+            }
+        }
+        Collections.reverse(list);
+        return list;
+    }
+}
+```
+
+### 636. Exclusive Time of Functions
+
+```java
+class Solution {
+    public int[] exclusiveTime(int n, List<String> logs) {
+        Deque<int[]> stack = new ArrayDeque<>();
+        int[] ans = new int[n];
+        for (String log : logs) {
+            String[] strs = log.split(":");
+            int id = Integer.parseInt(strs[0]);
+            int time = Integer.parseInt(strs[2]);
+            if (strs[1].equals("start")) {
+                if (!stack.isEmpty()) {
+                    ans[stack.peek()[0]] += time - stack.peek()[1];
+                }
+                stack.push(new int[]{id, time});
+            } else {
+                time++;
+                int[] last = stack.pop();
+                ans[last[0]] += time - last[1];
+                if (!stack.isEmpty()) {
+                    stack.peek()[1] = time;
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+
+### 654. Maximum Binary Tree
+
+```java
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return build(nums, 0, nums.length - 1);
+    }
+
+    public TreeNode build(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        int max = left;
+        for (int i = left + 1; i <= right; i++) {
+            if (nums[i] > nums[max]) {
+                max = i;
+            }
+        }
+        TreeNode root = new TreeNode(nums[max]);
+        root.left = build(nums, left, max - 1);
+        root.right = build(nums, max + 1, right);
+        return root;
+    }
+}
+```
+
+```java
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode p = null;
+        for (int i = 0; i < nums.length; i++) {
+            TreeNode node = new TreeNode(nums[i]);
+            p = null;
+            while (!stack.isEmpty() && stack.peek().val < nums[i]) {
+                TreeNode curr = stack.pop();
+                curr.right = p;
+                p = curr;
+            }
+            node.left = p;
+            stack.push(node);
+        }
+        p = null;
+        while (!stack.isEmpty()) {
+            TreeNode curr = stack.pop();
+            curr.right = p;
+            p = curr;
+        }
+        return p;
+    }
+}
+```
+
+### 678. Valid Parenthesis String
+
+> 用两个栈分别存左括号的下标和星号的下标
+> 优先使用左括号来匹配右括号，因为星号还可以作为右括号或者空字符来用
+
+```java
+class Solution {
+    public boolean checkValidString(String s) {
+        Deque<Integer> s1 = new ArrayDeque<>();
+        Deque<Integer> s2 = new ArrayDeque<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                s1.push(i);
+            } else if (c == ')') {
+                if (!s1.isEmpty()) {
+                    s1.pop();
+                } else {
+                    if (s2.isEmpty()) {
+                        return false;
+                    }
+                    s2.pop();
+                }
+            } else {
+                s2.push(i);
+            }
+        }
+        while (!s1.isEmpty()) {
+            if (s2.isEmpty() || s2.peek() < s1.peek()) {
+                return false;
+            }
+            s1.pop();
+            s2.pop();
+        }
+        return true;
+    }
+}
+```
+
+### 682. Baseball Game
+
+```java
+class Solution {
+    public int calPoints(String[] operations) {
+        Deque<Integer> s = new ArrayDeque<>();
+        for (String op : operations) {
+            if (op.equals("C")) {
+                s.pop();
+            } else if (op.equals("D")) {
+                int d = s.peek();
+                s.push(d * 2);
+            } else if (op.equals("+")) {
+                int d1 = s.pop();
+                int d2 = s.pop();
+                int d3 = d1 + d2;
+                s.push(d2);
+                s.push(d1);
+                s.push(d3);
+            } else {
+                s.push(Integer.parseInt(op));
+            }
+        }
+        int sum = 0;
+        while (!s.isEmpty()) {
+            sum += s.pop();
+        }
+        return sum;
+    }
+}
+```
+
+### 726. Number of Atoms
+
+```java
+class Solution {
+    public String countOfAtoms(String formula) {
+        Map<String, Integer> map = new HashMap<>();
+        Deque<Node> stack = new ArrayDeque<>();
+        int m = formula.length();
+        int i = 0;
+        while (i < m) {
+            char c = formula.charAt(i);
+            if (c == '(') {
+                stack.push(new Node("("));
+                i++;
+            }
+            if (c == ')') {
+                List<Node> li = new ArrayList<>();
+                while (!stack.isEmpty() && stack.peek().el != "(") {
+                    li.add(stack.pop());
+                }
+                stack.pop();
+                int j = i + 1;
+                int multiply = 1;
+                StringBuilder multi = new StringBuilder();
+                while (j < m && Character.isDigit(formula.charAt(j))) {
+                    multi.append(formula.charAt(j));
+                    j++;
+                }
+                if (multi.length() != 0) {
+                    multiply = Integer.parseInt(multi.toString());
+                }
+                for (Node node : li) {
+                    node.count *= multiply;
+                    stack.push(node);
+                }
+                i = j;
+            }
+            if (Character.isUpperCase(c)) {
+                StringBuilder atomic = new StringBuilder();
+                atomic.append(c);
+                int j = i + 1;
+                while (j < m && (Character.isLowerCase(formula.charAt(j)))) {
+                    atomic.append(formula.charAt(j));
+                    j++;
+                }
+                int count = 1;
+                StringBuilder cnt = new StringBuilder();
+                while (j < m && (Character.isDigit(formula.charAt(j)))) {
+                    cnt.append(formula.charAt(j));
+                    j++;
+                }
+                if (cnt.length() != 0) {
+                    count = Integer.parseInt(cnt.toString());
+                }
+                String el = atomic.toString();
+                stack.push(new Node(el, count));
+                i = j;
+            }
+        }
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            map.put(node.el, map.getOrDefault(node.el, 0) + node.count);
+        }
+        StringBuilder sb = new StringBuilder();
+        List<String> keys = new ArrayList<>(map.keySet());
+        Collections.sort(keys);
+        for (String key : keys) {
+            sb.append(key).append(map.get(key) == 1 ? "" : map.get(key));
+        }
+        return sb.toString();
+    }
+
+    class Node {
+        String el;
+        int count;
+
+        public Node(String _el, int _count) {
+            el = _el;
+            count = _count;
+        }
+
+        public Node(String _el) {
+            el = _el;
+            count = 1;
+        }
+    }
+}
+```
+
+### 735. Asteroid Collision
+
+```java
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+        Deque<Node> stack = new ArrayDeque<>();
+        Node[] arr = new Node[asteroids.length];
+        for (int i = 0; i < asteroids.length; i++) {
+            arr[i] = new Node(Math.abs(asteroids[i]), asteroids[i] < 0 ? -1 : 1);
+        }
+        for (int i = 0; i < arr.length; i++) {
+            Node curr = arr[i];
+            while (!stack.isEmpty() && (stack.peek().dir == 1 && curr.dir == -1)) {
+                Node pre = stack.pop();
+                if (pre.mess == curr.mess) {
+                    curr = null;
+                    break;
+                } else {
+                    if (pre.mess > curr.mess) {
+                        curr = pre;
+                    }
+                }
+            }
+            if (curr != null) {
+                stack.push(curr);
+            }
+        }
+        int[] res = new int[stack.size()];
+        int idx = res.length - 1;
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            res[idx--] = node.dir * node.mess;
+        }
+        return res;
+    }
+
+    class Node {
+        int mess;
+        int dir;
+
+        public Node(int _mess, int _dir) {
+            mess = _mess;
+            dir = _dir;
+        }
+    }
+}
+```
+
+### 739. Daily Temperatures
+
+```java
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        int[] ans = new int[temperatures.length];
+        for (int i = 0; i < temperatures.length; i++) {
+            while (!stack.isEmpty() && temperatures[stack.peek()] < temperatures[i]) {
+                int idx = stack.pop();
+                ans[idx] = i - idx;
+            }
+            stack.push(i);
+        }
+        return ans;
+    }
+}
+```
+
+### 768. Max Chunks To Make Sorted II
+
+```java
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (!stack.isEmpty() && stack.peek() > arr[i]) {
+                int t = stack.peek();
+                while (!stack.isEmpty() && stack.peek() > arr[i]) {
+                    stack.pop();
+                }
+                stack.push(t);
+            } else {
+                stack.push(arr[i]);
+            }
+        }
+        return stack.size();
+    }
+}
+```
+
+### 769. Max Chunks To Make Sorted
+
+> [1, 0, 2, 3] arr
+> [1, 2, 3] stack
+> 从左往右遍历，出现比栈顶小的值，就把小于当前值的数出栈，再把之前出栈的最大值入栈，等于在寻找之前比当前数大的最大值
+
+```java
+class Solution {
+    public int maxChunksToSorted(int[] arr) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < arr.length; i++) {
+            if (!stack.isEmpty() && stack.peek() > arr[i]) {
+                int t = stack.peek();
+                while (!stack.isEmpty() && stack.peek() > arr[i]) {
+                    stack.pop();
+                }
+                stack.push(t);
+            } else {
+                stack.push(arr[i]);
+            }
+        }
+        return stack.size();
+    }
+}
+```
+
 ### 921. Minimum Add to Make Parentheses Valid
 
 ```java
