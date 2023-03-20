@@ -1222,6 +1222,156 @@ class Solution {
 }
 ```
 
+### 770. Basic Calculator IV
+
+```java
+class Solution {
+    public List<String> basicCalculatorIV(String expression, String[] evalvars, int[] evalints) {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < evalvars.length; i++) {
+            map.put(evalvars[i], String.valueOf(evalints[i]));
+        }
+        return evalRPN(parse(expression, map)).toList();
+    }
+
+    List<String> parse(String expression, Map<String, String> map) {
+        List<String> rpn = new ArrayList<>();
+        Deque<Character> stack = new ArrayDeque<>();
+        int i = 0;
+        while (i < expression.length()) {
+            if (expression.charAt(i) == ' ') {
+                i++;
+            } else if (Character.isLetterOrDigit(expression.charAt(i))) {
+                int j = i + 1;
+                while (j < expression.length() && Character.isLetterOrDigit(expression.charAt(j))) {
+                    j++;
+                }
+                String str = expression.substring(i, j);
+                String var = map.getOrDefault(str, str);
+                rpn.add(var);
+                i = j;
+            } else {
+                if (expression.charAt(i) == '(') {
+                    stack.push('(');
+                } else if (expression.charAt(i) == ')') {
+                    while (stack.peek() != '(') {
+                        rpn.add(String.valueOf(stack.pop()));
+                    }
+                    stack.pop();
+                } else {
+                    while (!stack.isEmpty() && stack.peek() != '(' && higher(stack.peek(), expression.charAt(i))) {
+                        rpn.add(String.valueOf(stack.pop()));
+                    }
+                    stack.push(expression.charAt(i));
+                }
+                i++;
+            }
+        }
+        while (!stack.isEmpty()) {
+            rpn.add(String.valueOf(stack.pop()));
+        }
+        return rpn;
+    }
+
+    boolean higher(Character a, Character b) {
+        return a == '*' || a == '/' || (b != '*' && b != '/');
+    }
+
+    EXP evalRPN(List<String> rpn) {
+        Deque<EXP> stack = new ArrayDeque<>();
+        for (String str : rpn) {
+            if (Character.isLetterOrDigit(str.charAt(str.length() - 1))) {
+                stack.push(new EXP(str));
+            } else {
+                EXP e2 = stack.pop();
+                EXP e1 = stack.pop();
+                EXP e3 = new EXP();
+                switch (str) {
+                    case "+" -> {
+                        e3 = e1.add(e2, 1);
+                    }
+                    case "-" -> {
+                        e3 = e1.add(e2, -1);
+                    }
+                    case "*" -> {
+                        e3 = e1.multi(e2);
+                    }
+                }
+                stack.push(e3);
+            }
+        }
+        return stack.pop();
+    }
+
+    class EXP {
+        Map<List<String>, Integer> e;
+
+        public EXP() {
+            e = new HashMap<>();
+        }
+
+        public EXP(String str) {
+            e = new HashMap<>();
+            List<String> key = new ArrayList<>();
+            if (Character.isLetter(str.charAt(0))) {
+                key.add(str);
+                e.put(key, 1);
+            } else {
+                e.put(key, Integer.parseInt(str));
+            }
+        }
+
+        public EXP(Map<List<String>, Integer> _e) {
+            e = _e;
+        }
+
+        EXP add(EXP exp2, int sign) {
+            Map<List<String>, Integer> e3 = new HashMap<>(e);
+            for (List<String> k2 : exp2.e.keySet()) {
+                e3.put(k2, e3.getOrDefault(k2, 0) + sign * exp2.e.get(k2));
+            }
+            return new EXP(e3);
+        }
+
+        public EXP multi(EXP exp2) {
+            Map<List<String>, Integer> e3 = new HashMap<>();
+            for (List<String> k1 : e.keySet()) {
+                for (List<String> k2 : exp2.e.keySet()) {
+                    List<String> key = new ArrayList<>();
+                    key.addAll(k1);
+                    key.addAll(k2);
+                    Collections.sort(key);
+                    e3.put(key, e3.getOrDefault(key, 0) + e.get(k1) * exp2.e.get(k2));
+                }
+            }
+            return new EXP(e3);
+        }
+
+        List<String> toList() {
+            List<List<String>> keys = new ArrayList<>(e.keySet());
+            keys.sort((a, b) -> {
+                if (a.size() == b.size()) {
+                    return a.toString().compareTo(b.toString());
+                } else {
+                    return b.size() - a.size();
+                }
+            });
+            List<String> list = new ArrayList<>();
+            for (List<String> key : keys) {
+                if (e.get(key) == 0) continue;
+                StringBuilder sb = new StringBuilder();
+                sb.append(e.get(key));
+                for (String var : key) {
+                    sb.append("*").append(var);
+                }
+                list.add(sb.toString());
+            }
+            return list;
+        }
+    }
+}
+```
+
 ### 921. Minimum Add to Make Parentheses Valid
 
 ```java
@@ -1261,6 +1411,33 @@ class Solution {
         //需要补几个右括号
         count += l;
         return count;
+    }
+}
+```
+
+### 853. Car Fleet
+
+```java
+class Solution {
+    public int carFleet(int target, int[] position, int[] speed) {
+        List<int[]> list = new ArrayList<>();
+        for (int i = 0; i < position.length; i++) {
+            list.add(new int[]{position[i], speed[i]});
+        }
+        list.sort((a, b) -> a[0] - b[0]);
+        Deque<long[]> stack = new ArrayDeque<>();
+        for (int i = 0; i < list.size(); i++) {
+            long[] time = new long[]{target - list.get(i)[0], list.get(i)[1]};
+            while (!stack.isEmpty() && longer(time, stack.peek())) {
+                stack.pop();
+            }
+            stack.push(time);
+        }
+        return stack.size();
+    }
+
+    boolean longer(long[] a, long[] b) {
+        return a[0] * b[1] >= b[0] * a[1];
     }
 }
 ```
