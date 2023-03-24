@@ -54,3 +54,65 @@ class Solution {
     }
 }
 ```
+
+### 53. Maximum Subarray
+
+```java
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int m = nums.length;
+        int[] dp = new int[m];
+        dp[0] = nums[0];
+        for (int i = 1; i < m; i++) {
+            dp[i] = Math.max(nums[i], dp[i - 1] + nums[i]);
+        }
+        int max = Integer.MIN_VALUE;
+        for (int v : dp) {
+            max = Math.max(max, v);
+        }
+        return max;
+    }
+}
+```
+
+### 918. Maximum Sum Circular Subarray
+
+> 1. 最大值出现在中间区间，求连续字串的最大值：max
+> 2. 最大值出现在首位相连区间，求中间区间连续字串的最小值(和为负数的一段)，max = Math.max(max, sum - min)
+> 3. 如果都为负数，找最大值即可
+
+```java
+class Solution {
+    public int maxSubarraySumCircular(int[] nums) {
+        int m = nums.length;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        //以i为结尾的连续子串最小值
+        int[] dp1 = new int[m];
+        //以i为结尾的连续子串的最大值
+        int[] dp2 = new int[m];
+        dp1[0] = nums[0];
+        dp2[0] = nums[0];
+
+        int sum = nums[0];
+        boolean negative = nums[0] < 0;
+        for (int i = 1; i < m; i++) {
+            sum += nums[i];
+            if (nums[i] >= 0) negative = false;
+            dp1[i] = Math.min(nums[i], dp1[i - 1] + nums[i]);
+            dp2[i] = Math.max(nums[i], dp2[i - 1] + nums[i]);
+        }
+        for (int v : dp1) {
+            min = Math.min(min, v);
+        }
+        for (int v : dp2) {
+            max = Math.max(max, v);
+        }
+        if (negative) {
+            return max;
+        } else {
+            return Math.max(max, sum - min);
+        }
+    }
+}
+```

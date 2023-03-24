@@ -1,3 +1,26 @@
+### 264. Ugly Number II
+
+```java
+class Solution {
+    public int nthUglyNumber(int n) {
+        int i2 = 0;
+        int i3 = 0;
+        int i5 = 0;
+        int[] ans = new int[n];
+        ans[0] = 1;
+        int i = 1;
+        while (i < n) {
+            ans[i] = Math.min(ans[i2] * 2, Math.min(ans[i3] * 3, ans[i5] * 5));
+            if (ans[i] == ans[i2] * 2) i2++;
+            if (ans[i] == ans[i3] * 3) i3++;
+            if (ans[i] == ans[i5] * 5) i5++;
+            i++;
+        }
+        return ans[n - 1];
+    }
+}
+```
+
 ### 844. Backspace String Compare
 
 > from right to left
@@ -40,3 +63,4 @@ class Solution {
     }
 }
 ```
+
