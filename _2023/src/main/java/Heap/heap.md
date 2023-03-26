@@ -139,3 +139,130 @@ class MedianFinder {
     }
 }
 ```
+
+### 355. Design Twitter
+
+```java
+class Twitter {
+    Map<Integer, User> map = new HashMap<>();
+
+    User getUser(int userId) {
+        if (!map.containsKey(userId)) {
+            map.put(userId, new User(userId));
+        }
+        return map.get(userId);
+    }
+
+    public Twitter() {
+
+    }
+
+    public void postTweet(int userId, int tweetId) {
+        User user = getUser(userId);
+        user.post(tweetId);
+    }
+
+    public List<Integer> getNewsFeed(int userId) {
+        User user = getUser(userId);
+        return user.getNewsFeed();
+    }
+
+    public void follow(int followerId, int followeeId) {
+        User user = getUser(followerId);
+        user.follow(followeeId);
+    }
+
+    public void unfollow(int followerId, int followeeId) {
+        User user = getUser(followerId);
+        user.unfollow(followeeId);
+    }
+
+    class User {
+        int userId;
+        Set<Integer> followees;
+        Tweet head;
+
+        public User(int userId) {
+            this.userId = userId;
+            this.followees = new HashSet<>();
+            this.followees.add(userId);
+        }
+
+        public void follow(int followeeId) {
+            followees.add(followeeId);
+        }
+
+        public void unfollow(int followeeId) {
+            followees.remove(followeeId);
+        }
+
+        public void post(int tweetId) {
+            Tweet tweet = new Tweet(tweetId);
+            tweet.next = head;
+            head = tweet;
+        }
+
+        public List<Integer> getNewsFeed() {
+            Queue<Tweet> q = new PriorityQueue<>((a, b) -> b.timestamp - a.timestamp);
+            for (int f : followees) {
+                User followee = getUser(f);
+                if (followee.head != null) {
+                    q.offer(followee.head);
+                }
+            }
+            List<Integer> list = new ArrayList<>();
+            while (!q.isEmpty() && list.size() < 10) {
+                Tweet tweet = q.poll();
+                list.add(tweet.id);
+                if (tweet.next != null) {
+                    q.offer(tweet.next);
+                }
+            }
+            return list;
+        }
+    }
+
+    int time = 0;
+
+    class Tweet {
+        int id;
+        int timestamp;
+        Tweet next;
+
+        public Tweet(int id) {
+            this.id = id;
+            this.timestamp = time;
+            time++;
+        }
+    }
+}
+```
+
+### 373. Find K Pairs with Smallest Sums
+
+> 合并n个链表
+> [0,0][0,1][0,2]
+> [1,0][1,1][1,2]
+> [2,0][2,1][2,2]
+
+```java
+class Solution {
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        int m = nums1.length;
+        int n = nums2.length;
+        List<List<Integer>> list = new ArrayList<>();
+        Queue<int[]> q = new PriorityQueue<>((a, b) -> (nums1[a[0]] + nums2[a[1]]) - (nums1[b[0]] + nums2[b[1]]));
+        for (int i = 0; i < m; i++) {
+            q.offer(new int[]{i, 0});
+        }
+        while (!q.isEmpty() && list.size() < k) {
+            int[] p = q.poll();
+            list.add(List.of(nums1[p[0]], nums2[p[1]]));
+            if (p[1] < n - 1) {
+                q.offer(new int[]{p[0], p[1] + 1});
+            }
+        }
+        return list;
+    }
+}
+```

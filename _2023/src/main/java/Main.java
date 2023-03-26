@@ -3,11 +3,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 1);
+        map.put(3, 2);
+        map.put(2, 3);
+        map.put(4, 4);
 
+        List<Map.Entry<Integer, Integer>> list = new ArrayList<>(map.entrySet());
+        list.sort((a, b) -> a.getKey() - b.getKey());
+        System.out.println(list.get(1).getValue());
     }
 
     void quickSort(int[] nums, int l, int r) {
@@ -51,5 +59,6 @@ public class Main {
         quickSort(nums, 0, nums.length - 1);
         Assertions.assertArrayEquals(copy, nums);
     }
+
 
 }
