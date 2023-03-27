@@ -1,11 +1,9 @@
 package Heap;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class FindKPairsWithSmallestSum {
     public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
@@ -31,6 +29,7 @@ public class FindKPairsWithSmallestSum {
         int[] nums1 = {1, 7, 11};
         int[] nums2 = {2, 4, 6};
         int k = 3;
-        System.out.println(kSmallestPairs(nums1, nums2, k));
+        int[][] exp = {{1, 2}, {1, 4}, {1, 6}};
+        Assertions.assertEquals(Arrays.deepToString(exp), kSmallestPairs(nums1, nums2, k).toString());
     }
 }
